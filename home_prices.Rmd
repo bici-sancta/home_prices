@@ -11,6 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 rm(list=ls())
 
+library(ggplot2)
+library(MASS)
+
 home_dir <- "~/_smu/_src/home_prices/"
 setwd(home_dir)
 data_dir <- "./data"
@@ -100,6 +103,15 @@ Analysis Question 2: (35 %)
 	setwd(home_dir)
 
 	names(homes) <- tolower(names(homes))
+	
+	for (i in 2:(length(homes)))
+	{
+		if (class(homes[,i]) == "character")
+		{
+			homes[,i] <- factor (homes[,i])
+		}
+	}
+	
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	remove outliers ... more than 5 sigma from mean value
@@ -141,29 +153,33 @@ Analysis Question 2: (35 %)
 # ...	make some plots for numberic variables... linear, log_x, log_y, log_xy ...
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-	pdf ("homes_train_plots.pdf", width = 10, height = 7)
+#	pdf ("homes_train_plots.pdf", width = 10, height = 7)
 
 	par (mfrow = c (2, 3))
 	for (i in 2:(length(homes)))
 	{
 		if(class(homes[,i]) == "integer" || class(homes[,i]) == "numeric" || class(homes[,i]) == "matrix")
 		{
-			plot (homes[,i],
-#				 col = homes[,length(homes)]+1,
-				 main = (names(homes[i])))
-
-			boxplot(homes[,i])
-			plot(    homes$saleprice  ~ homes[,i])
-		
-#			plot(    homes$saleprice  ~ log(homes[,i]))
-#			plot(log(homes$saleprice) ~     homes[,i])
-#			plot(log(homes$saleprice) ~ log(homes[,i]))
+			plot (homes[,i], main = (names(homes[i])))
+			hist(homes[,i])
+			plot(log(homes$saleprice)  ~ homes[,i])
 		}
 	}
 
-	plot(homes$saleprice ~ homes$sale_date)
+	par (mfrow = c (1, 1))
+	for (i in 2:(length(homes)))
+	{
+		if(class(homes[,i]) == "factor")
+		{
+			p <- ggplot(homes, aes(x = homes[,i], y = log(saleprice), fill = homes[,i])) + geom_boxplot()
+			p + ggtitle(names(homes[i]))
+			print(p)
+		}
+	}	
+		
+			plot(homes$saleprice ~ homes$sale_date)
 
-	dev.off()
+#	dev.off()
 	
 	for (i in 2:(length(homes)))
 	{
@@ -177,4 +193,60 @@ Analysis Question 2: (35 %)
 	}
 
 	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	Columns to remove - based on visual inspection
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	
+	homes_subset <- subset(homes, select = -c(
+		id,
+		mssubclass,
+		street,
+		alley,
+		utilities,
+		condition2,
+		roofmatl,
+		centralair,
+		bsmtfinsf2,
+		lowqualfinsf,
+		bsmthalfbath,
+		kitchenabvgr,
+		x3ssnporch,
+		screenporch,
+		garagequal,
+		garagecond,
+		paveddrive,
+		poolarea,
+		poolqc,
+		miscval,
+		mosold,
+		yrsold))
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	Impute NAs to functional value
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	for (i in 2 : (length(homes_subset)))
+	{
+		if(class(homes_subset[,i]) == "integer" || class(homes_subset[,i]) == "numeric" || class(homes_subset[,i]) == "matrix")
+		{
+			homes_subset[,i][is.na (homes_subset[,i])] <- min (homes_subset[,i], na.rm = TRUE)
+		}
+	}
+	
+	for (i in 2:(length(homes_subset)))
+	{
+		if(class(homes_subset[,i]) == "character")
+		{
+			homes_subset[,i][is.na (homes_subset[,i])] <- "None"
+		}
+	}
+
+	homes_subset$log_saleprice <- log(homes_subset$saleprice)
+	
+	homes_subset <- subset(homes_subset, select = -c(saleprice, sale_date))
+	
+	sas_dir <- "~/sas/SASUniversityEdition/myfolders/"
+	setwd(sas_dir)
+	write.csv (homes_subset, file = "training_set_cleaned.csv", row.names = FALSE)
+
 ```
