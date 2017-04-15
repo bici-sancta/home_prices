@@ -165,4 +165,23 @@ Analysis Question 2: (35 %)
 
 	dev.off()
 
+	
+	for (i in 2:(length(homes)))
+	{
+		if(class(homes[,i]) == "integer" || class(homes[,i]) == "numeric" || class(homes[,i]) == "matrix")
+		{
+			var_name = names(homes[i])
+
+			fit <- lm(homes$saleprice ~ homes[,i])
+			
+			print(sprintf(" ... %3d : %s | r^2 = %8.3f", i, names(homes[i]), summary(fit)$r.squared))
+		}
+	}
+
+	
+	
+	
+	
+	
+	
 ```
