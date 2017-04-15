@@ -174,7 +174,8 @@ Analysis Question 2: (35 %)
 
 			fit <- lm(homes$saleprice ~ homes[,i])
 			
-			print(sprintf(" ... %3d : %s | r^2 = %8.3f", i, names(homes[i]), summary(fit)$r.squared))
+			print(sprintf(" ... %3d : %20s | r^2 = %8.3f | p-value = %8.5f",
+						  i, names(homes[i]), summary(fit)$r.squared, summary(fit)$coefficients[,4] ))
 		}
 	}
 

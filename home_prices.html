@@ -253,6 +253,93 @@ Analysis Question 2: (35 %)</p>
     dev.off()</code></pre>
 <pre><code>## png 
 ##   2</code></pre>
+<pre class="r"><code>    for (i in 2:(length(homes)))
+    {
+        if(class(homes[,i]) == &quot;integer&quot; || class(homes[,i]) == &quot;numeric&quot; || class(homes[,i]) == &quot;matrix&quot;)
+        {
+            var_name = names(homes[i])
+
+            fit &lt;- lm(homes$saleprice ~ homes[,i])
+            
+            print(sprintf(&quot; ... %3d : %20s | r^2 = %8.3f | p-value = %8.5f&quot;,
+                          i, names(homes[i]), summary(fit)$r.squared, summary(fit)$coefficients[,4] ))
+        }
+    }</code></pre>
+<pre><code>## [1] &quot; ...   2 :           mssubclass | r^2 =    0.007 | p-value =  0.00000&quot;
+## [2] &quot; ...   2 :           mssubclass | r^2 =    0.007 | p-value =  0.00127&quot;
+## [1] &quot; ...   4 :          lotfrontage | r^2 =    0.145 | p-value =  0.00000&quot;
+## [2] &quot; ...   4 :          lotfrontage | r^2 =    0.145 | p-value =  0.00000&quot;
+## [1] &quot; ...   5 :              lotarea | r^2 =    0.140 | p-value =  0.00000&quot;
+## [2] &quot; ...   5 :              lotarea | r^2 =    0.140 | p-value =  0.00000&quot;
+## [1] &quot; ...  18 :          overallqual | r^2 =    0.626 | p-value =  0.00000&quot;
+## [2] &quot; ...  18 :          overallqual | r^2 =    0.626 | p-value =  0.00000&quot;
+## [1] &quot; ...  19 :          overallcond | r^2 =    0.006 | p-value =  0.00000&quot;
+## [2] &quot; ...  19 :          overallcond | r^2 =    0.006 | p-value =  0.00291&quot;
+## [1] &quot; ...  20 :            yearbuilt | r^2 =    0.273 | p-value =  0.00000&quot;
+## [2] &quot; ...  20 :            yearbuilt | r^2 =    0.273 | p-value =  0.00000&quot;
+## [1] &quot; ...  21 :         yearremodadd | r^2 =    0.257 | p-value =  0.00000&quot;
+## [2] &quot; ...  21 :         yearremodadd | r^2 =    0.257 | p-value =  0.00000&quot;
+## [1] &quot; ...  27 :           masvnrarea | r^2 =    0.214 | p-value =  0.00000&quot;
+## [2] &quot; ...  27 :           masvnrarea | r^2 =    0.214 | p-value =  0.00000&quot;
+## [1] &quot; ...  35 :           bsmtfinsf1 | r^2 =    0.166 | p-value =  0.00000&quot;
+## [2] &quot; ...  35 :           bsmtfinsf1 | r^2 =    0.166 | p-value =  0.00000&quot;
+## [1] &quot; ...  37 :           bsmtfinsf2 | r^2 =    0.003 | p-value =  0.00000&quot;
+## [2] &quot; ...  37 :           bsmtfinsf2 | r^2 =    0.003 | p-value =  0.04807&quot;
+## [1] &quot; ...  38 :            bsmtunfsf | r^2 =    0.046 | p-value =  0.00000&quot;
+## [2] &quot; ...  38 :            bsmtunfsf | r^2 =    0.046 | p-value =  0.00000&quot;
+## [1] &quot; ...  39 :          totalbsmtsf | r^2 =    0.417 | p-value =  0.00000&quot;
+## [2] &quot; ...  39 :          totalbsmtsf | r^2 =    0.417 | p-value =  0.00000&quot;
+## [1] &quot; ...  44 :            x1stflrsf | r^2 =    0.395 | p-value =  0.00001&quot;
+## [2] &quot; ...  44 :            x1stflrsf | r^2 =    0.395 | p-value =  0.00000&quot;
+## [1] &quot; ...  45 :            x2ndflrsf | r^2 =    0.102 | p-value =  0.00000&quot;
+## [2] &quot; ...  45 :            x2ndflrsf | r^2 =    0.102 | p-value =  0.00000&quot;
+## [1] &quot; ...  46 :         lowqualfinsf | r^2 =    0.003 | p-value =  0.00000&quot;
+## [2] &quot; ...  46 :         lowqualfinsf | r^2 =    0.003 | p-value =  0.02780&quot;
+## [1] &quot; ...  47 :            grlivarea | r^2 =    0.519 | p-value =  0.00479&quot;
+## [2] &quot; ...  47 :            grlivarea | r^2 =    0.519 | p-value =  0.00000&quot;
+## [1] &quot; ...  48 :         bsmtfullbath | r^2 =    0.052 | p-value =  0.00000&quot;
+## [2] &quot; ...  48 :         bsmtfullbath | r^2 =    0.052 | p-value =  0.00000&quot;
+## [1] &quot; ...  49 :         bsmthalfbath | r^2 =    0.000 | p-value =  0.00000&quot;
+## [2] &quot; ...  49 :         bsmthalfbath | r^2 =    0.000 | p-value =  0.57466&quot;
+## [1] &quot; ...  50 :             fullbath | r^2 =    0.314 | p-value =  0.00000&quot;
+## [2] &quot; ...  50 :             fullbath | r^2 =    0.314 | p-value =  0.00000&quot;
+## [1] &quot; ...  51 :             halfbath | r^2 =    0.081 | p-value =  0.00000&quot;
+## [2] &quot; ...  51 :             halfbath | r^2 =    0.081 | p-value =  0.00000&quot;
+## [1] &quot; ...  52 :         bedroomabvgr | r^2 =    0.029 | p-value =  0.00000&quot;
+## [2] &quot; ...  52 :         bedroomabvgr | r^2 =    0.029 | p-value =  0.00000&quot;
+## [1] &quot; ...  53 :         kitchenabvgr | r^2 =    0.018 | p-value =  0.00000&quot;
+## [2] &quot; ...  53 :         kitchenabvgr | r^2 =    0.018 | p-value =  0.00000&quot;
+## [1] &quot; ...  55 :         totrmsabvgrd | r^2 =    0.285 | p-value =  0.13420&quot;
+## [2] &quot; ...  55 :         totrmsabvgrd | r^2 =    0.285 | p-value =  0.00000&quot;
+## [1] &quot; ...  57 :           fireplaces | r^2 =    0.218 | p-value =  0.00000&quot;
+## [2] &quot; ...  57 :           fireplaces | r^2 =    0.218 | p-value =  0.00000&quot;
+## [1] &quot; ...  60 :          garageyrblt | r^2 =    0.237 | p-value =  0.00000&quot;
+## [2] &quot; ...  60 :          garageyrblt | r^2 =    0.237 | p-value =  0.00000&quot;
+## [1] &quot; ...  62 :           garagecars | r^2 =    0.410 | p-value =  0.00000&quot;
+## [2] &quot; ...  62 :           garagecars | r^2 =    0.410 | p-value =  0.00000&quot;
+## [1] &quot; ...  63 :           garagearea | r^2 =    0.389 | p-value =  0.00000&quot;
+## [2] &quot; ...  63 :           garagearea | r^2 =    0.389 | p-value =  0.00000&quot;
+## [1] &quot; ...  67 :           wooddecksf | r^2 =    0.107 | p-value =  0.00000&quot;
+## [2] &quot; ...  67 :           wooddecksf | r^2 =    0.107 | p-value =  0.00000&quot;
+## [1] &quot; ...  68 :          openporchsf | r^2 =    0.115 | p-value =  0.00000&quot;
+## [2] &quot; ...  68 :          openporchsf | r^2 =    0.115 | p-value =  0.00000&quot;
+## [1] &quot; ...  69 :        enclosedporch | r^2 =    0.020 | p-value =  0.00000&quot;
+## [2] &quot; ...  69 :        enclosedporch | r^2 =    0.020 | p-value =  0.00000&quot;
+## [1] &quot; ...  70 :           x3ssnporch | r^2 =    0.000 | p-value =  0.00000&quot;
+## [2] &quot; ...  70 :           x3ssnporch | r^2 =    0.000 | p-value =  0.92444&quot;
+## [1] &quot; ...  71 :          screenporch | r^2 =    0.007 | p-value =  0.00000&quot;
+## [2] &quot; ...  71 :          screenporch | r^2 =    0.007 | p-value =  0.00168&quot;
+## [1] &quot; ...  72 :             poolarea | r^2 =    0.000 | p-value =  0.00000&quot;
+## [1] &quot; ...  76 :              miscval | r^2 =    0.000 | p-value =  0.00000&quot;
+## [2] &quot; ...  76 :              miscval | r^2 =    0.000 | p-value =  0.42297&quot;
+## [1] &quot; ...  77 :               mosold | r^2 =    0.002 | p-value =  0.00000&quot;
+## [2] &quot; ...  77 :               mosold | r^2 =    0.002 | p-value =  0.07613&quot;
+## [1] &quot; ...  78 :               yrsold | r^2 =    0.001 | p-value =  0.24527&quot;
+## [2] &quot; ...  78 :               yrsold | r^2 =    0.001 | p-value =  0.26941&quot;
+## [1] &quot; ...  81 :            saleprice | r^2 =    1.000 | p-value =  0.00000&quot;
+## [2] &quot; ...  81 :            saleprice | r^2 =    1.000 | p-value =  0.00000&quot;
+## [1] &quot; ...  83 :          total_baths | r^2 =    0.358 | p-value =  0.00000&quot;
+## [2] &quot; ...  83 :          total_baths | r^2 =    0.358 | p-value =  0.00000&quot;</code></pre>
 </div>
 
 
