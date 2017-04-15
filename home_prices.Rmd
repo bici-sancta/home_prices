@@ -164,25 +164,17 @@ Analysis Question 2: (35 %)
 	plot(homes$saleprice ~ homes$sale_date)
 
 	dev.off()
-
 	
 	for (i in 2:(length(homes)))
 	{
 		if(class(homes[,i]) == "integer" || class(homes[,i]) == "numeric" || class(homes[,i]) == "matrix")
 		{
-			var_name = names(homes[i])
-
 			fit <- lm(homes$saleprice ~ homes[,i])
 			
-			print(sprintf(" ... %3d : %20s | r^2 = %8.3f | p-value = %8.5f",
-						  i, names(homes[i]), summary(fit)$r.squared, summary(fit)$coefficients[,4] ))
+			print(sprintf(" ... %3d : %20s | r^2 = %8.3f | p-value = %12.4e",
+						  i, names(homes[i]), summary(fit)$r.squared, summary(fit)$coefficients[,4][2] ))
 		}
 	}
 
-	
-	
-	
-	
-	
 	
 ```
