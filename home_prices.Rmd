@@ -257,7 +257,12 @@ Analysis Question 2: (35 %)
 	setwd(sas_dir)
 	write.csv (homes_subset, file = "training_set_cleaned.csv", row.names = FALSE)
 	setwd(home_dir)
-	
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	save base data set for multiple solution options
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	homes_subset_base <- homes_subset
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	base model on all candidate features
@@ -341,5 +346,98 @@ Analysis Question 2: (35 %)
 
 	plot(predict(fit_all, newdata = test_homes))
 	
+	test_homes$pred_log_saleprice <- predict(fit_all, newdata = test_homes)
 	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	submittal file
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	df_submit <- data.frame(test_homes$id, exp(test_homes$pred_log_saleprice))
+	names(df_submit) <- c("Id", "SalePrice")
+	
+	df_submit$SalePrice[is.na(df_submit$SalePrice)] <- median(df_submit$SalePrice, na.rm = TRUE)
+
+	write.csv(df_submit, file = "submit_test_pred.csv", row.names = FALSE)
+	
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#  ...	Stepwise Regression - Forward
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+library (MASS)
+	
+	homes_subset <- homes_subset_base
+
+	fit_forward <- lm (log_saleprice ~ ., data = homes_subset)
+	step <- stepAIC(fit_forward, direction = "forward")
+	step$anova # display results 
+	
+	plot(predict(fit_forward, newdata = test_homes))
+	
+	test_homes$pred_fwd_log_saleprice <- predict(fit_forward, newdata = test_homes)
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	submittal file - forward selection
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	df_submit_fwd <- data.frame(test_homes$id, exp(test_homes$pred_fwd_log_saleprice))
+	names(df_submit_fwd) <- c("Id", "SalePrice")
+	
+	df_submit_fwd$SalePrice[is.na(df_submit_fwd$SalePrice)] <- median(df_submit_fwd$SalePrice, na.rm = TRUE)
+
+	write.csv(df_submit_fwd, file = "submit_test_pred_fwd_selection.csv", row.names = FALSE)
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#  ...	Stepwise Regression - Backward
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	
+	homes_subset <- homes_subset_base
+
+	fit_backward <- lm (log_saleprice ~ ., data = homes_subset)
+	step <- stepAIC(fit_backward, direction = "backward")
+	step$anova # display results 
+	
+	plot(predict(fit_backward, newdata = test_homes))
+	
+	test_homes$pred_bwd_log_saleprice <- predict(fit_backward, newdata = test_homes)
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	submittal file - backward selection
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	df_submit_bwd <- data.frame(test_homes$id, exp(test_homes$pred_bwd_log_saleprice))
+	names(df_submit_bwd) <- c("Id", "SalePrice")
+	
+	df_submit_bwd$SalePrice[is.na(df_submit_bwd$SalePrice)] <- median(df_submit_bwd$SalePrice, na.rm = TRUE)
+
+	write.csv(df_submit_bwd, file = "submit_test_pred_bwd_selection.csv", row.names = FALSE)
+
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#  ...	Stepwise Regression - both
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+library (MASS)
+	
+	homes_subset <- homes_subset_base
+
+	fit_both <- lm (log_saleprice ~ ., data = homes_subset)
+	step <- stepAIC(fit_both, direction = "both")
+	step$anova # display results 
+	
+	plot(predict(fit_both, newdata = test_homes))
+	
+	test_homes$pred_both_log_saleprice <- predict(fit_both, newdata = test_homes)
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	submittal file - both selection
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	df_submit_both <- data.frame(test_homes$id, exp(test_homes$pred_both_log_saleprice))
+	names(df_submit_both) <- c("Id", "SalePrice")
+	
+	df_submit_both$SalePrice[is.na(df_submit_both$SalePrice)] <- median(df_submit_both$SalePrice, na.rm = TRUE)
+
+	write.csv(df_submit_both, file = "submit_test_pred_both_selection.csv", row.names = FALSE)
+
 ```
