@@ -13,6 +13,7 @@ rm(list=ls())
 
 library(ggplot2)
 library(MASS)
+library(car)
 
 home_dir <- "~/_smu/_src/home_prices/"
 setwd(home_dir)
@@ -135,8 +136,6 @@ Analysis Question 2: (35 %)
 	dates <- paste(homes$yrsold, sprintf("%02d", homes$mosold), "01")
 	homes$sale_date <- as.Date(dates, "%Y %m %d")
 	
-	homes$total_baths <- homes$fullbath + homes$halfbath / 2.0
-
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	scale each column independently
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -171,8 +170,8 @@ Analysis Question 2: (35 %)
 	{
 		if(class(homes[,i]) == "factor")
 		{
-			p <- ggplot(homes, aes(x = homes[,i], y = log(saleprice), fill = homes[,i])) + geom_boxplot()
-			p + ggtitle(names(homes[i]))
+			plot_title <- names(homes[i])
+			p <- ggplot(homes, aes(x = homes[,i], y = log(saleprice), fill = homes[,i])) + geom_boxplot() + labs(title = plot_title)
 			print(p)
 		}
 	}	
@@ -207,6 +206,8 @@ Analysis Question 2: (35 %)
 		roofmatl,
 		centralair,
 		bsmtfinsf2,
+		fence,
+		miscfeature,
 		lowqualfinsf,
 		bsmthalfbath,
 		kitchenabvgr,
@@ -219,7 +220,11 @@ Analysis Question 2: (35 %)
 		poolqc,
 		miscval,
 		mosold,
-		yrsold))
+		yrsold,
+		exterior2nd,
+		bsmtcond,
+		bsmtfintype1,
+		garagefinish ))
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	Impute NAs to functional value
@@ -235,8 +240,11 @@ Analysis Question 2: (35 %)
 	
 	for (i in 2:(length(homes_subset)))
 	{
-		if(class(homes_subset[,i]) == "character")
+		if(class(homes_subset[,i]) == "factor")
 		{
+			levels <- levels(homes_subset[,i])
+			levels[length(levels) + 1] <- "None"
+			homes_subset[,i] <- factor(homes_subset[,i], levels = levels)
 			homes_subset[,i][is.na (homes_subset[,i])] <- "None"
 		}
 	}
@@ -248,5 +256,87 @@ Analysis Question 2: (35 %)
 	sas_dir <- "~/sas/SASUniversityEdition/myfolders/"
 	setwd(sas_dir)
 	write.csv (homes_subset, file = "training_set_cleaned.csv", row.names = FALSE)
+	
 
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	base model on all candidate features
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	
+	df_fits <- data.frame(row = integer(0), feature = character(0), r_squared = numeric(0), stringsAsFactors = FALSE)
+	
+	for (i in 1 : (length(homes_subset)))
+	{
+			fit <- lm(homes_subset$log_saleprice ~ homes[,i])
+			
+			print(sprintf(" ... %3d : %20s | r^2 = %8.3f | p-value = %12.4e",
+						  i, names(homes_subset[i]), summary(fit)$r.squared, summary(fit)$coefficients[,4][2] ))
+			
+			next_row <- data.frame(row = i, feature = names(homes_subset[i]), r_squared = summary(fit)$r.squared)
+			df_fits <- rbind(df_fits, next_row)
+	}
+
+	df_sort <- df_fits[with(df_fits, order(-r_squared)), ]
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	do some feature reduction based on VIF
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+		
+	fit_all <- lm (log_saleprice ~ ., data = homes_subset)
+	
+	vif_lst <- vif(fit_all)
+	vif_lst[order(vif_lst)]
+
+	iter <- 1
+	
+	while ( vif_lst[order(-vif_lst[,1]),][1] > 5)
+	{
+		rmv_col <- order(-vif_lst[,1])[1]
+
+				prnt_line <- paste(iter, "remove column :",
+					   names(homes_subset)[[rmv_col]],
+						"VIF = ", round(vif_lst[order(-vif_lst[,1]),][1], 2))
+
+		print (prnt_line)
+   
+		homes_subset[, rmv_col] = NULL
+		
+		fit_all <- lm (log_saleprice ~ .,
+						data = homes_subset)
+		
+		summary(fit_all)
+		
+		vif_lst <- vif(fit_all)
+		vif_lst[order(vif_lst)]
+	
+		iter <- iter + 1
+	}
+	
+	cat ("\n-=-=-=-=-=   Colinearity reduced   -=-=-=-=-=-=\n")
+	names (homes_subset)
+	
+	plot(predict(fit_all) - homes_subset$log_saleprice)
+	plot(predict(fit_all) ~ homes_subset$log_saleprice)
+	plot(exp(predict(fit_all)) ~ exp(homes_subset$log_saleprice))
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	test cases
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	
+	setwd(data_dir)
+	test_homes <- read.csv("test.csv", stringsAsFactors = FALSE)
+	setwd(home_dir)
+	
+	names(test_homes) <- tolower(names(test_homes))
+	
+	for (i in 2:(length(test_homes)))
+	{
+		if (class(test_homes[,i]) == "character")
+		{
+			test_homes[,i] <- factor (test_homes[,i])
+		}
+	}
+
+	plot(predict(fit_all, newdata = test_homes))
+	
+	
 ```
