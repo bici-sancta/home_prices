@@ -256,6 +256,7 @@ Analysis Question 2: (35 %)
 	sas_dir <- "~/sas/SASUniversityEdition/myfolders/"
 	setwd(sas_dir)
 	write.csv (homes_subset, file = "training_set_cleaned.csv", row.names = FALSE)
+	setwd(home_dir)
 	
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -269,9 +270,11 @@ Analysis Question 2: (35 %)
 			fit <- lm(homes_subset$log_saleprice ~ homes[,i])
 			
 			print(sprintf(" ... %3d : %20s | r^2 = %8.3f | p-value = %12.4e",
-						  i, names(homes_subset[i]), summary(fit)$r.squared, summary(fit)$coefficients[,4][2] ))
+						  i, names(homes_subset[i]), summary(fit)$r.squared,
+						  		summary(fit)$coefficients[,4][2] ))
 			
-			next_row <- data.frame(row = i, feature = names(homes_subset[i]), r_squared = summary(fit)$r.squared)
+			next_row <- data.frame(row = i, feature = names(homes_subset[i]),
+								   r_squared = summary(fit)$r.squared)
 			df_fits <- rbind(df_fits, next_row)
 	}
 
