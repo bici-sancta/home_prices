@@ -1,6 +1,6 @@
 ---
 title: "ames iowa kaggle home price modeling"
-author: "preeti swaminathan & partick mcdevitt"
+author: "preeti swaminathan & patrick mcdevitt"
 date: "14 avril 2017"
 output: html_document
 ---
@@ -22,104 +22,13 @@ data_dir <- "./data"
 
 ```
 
-## House Prices - à la Kaggle
+## House Prices - à la Kaggle - Homework 13
 
-Ask a home buyer to describe their dream house, and they probably won't begin with the height of the basement ceiling or the proximity to an east-west railroad. But this playground competition's dataset proves that much more influences price negotiations than the number of bedrooms or a white-picket fence.  
-With 79 explanatory variables describing (almost) every aspect of residential homes in Ames, Iowa, this competition challenges you to predict the final price of each home.  
-  
-Deliverables:  
-Your group is to turn in a paper that is no more that 7 pages long (without the appendix). Please put your code in the appendix, but any graphs and tables in the body of the paper.   
-  
-Sample Format  
-Required deliverables in the complete report.  The format of your paper (headers, sections, etc) is flexible although should contain the following information:  
-  
-Introduction   
-  
-Data Description   
-(Where did the data come from?  How big is it? How many observations?  Where can we find out more?  What are the specific variables that we need to know to understand with respect to your analysis?)  
-  
-Analysis Question 1:  
-	Restatement of Problem   
-  
-	Specify the Model  
-	   
-	Checking Assumptions   
-		Residual Plots   
-		Influential point analysis (Cook’s D and Leverage)  
-		Make sure and address each assumption.  
-  
-	Comparing Competing Models  
-		adj R2    
-		Interval CVPress    
-	  
-	Parameter Interpretation  
-		Interpretation   
-		Confidence Intervals   
-  
-Conclusion  
-	A short summary of the analysis.  
-	  
-  
-Analysis Question 2  
-Restatement of Problem   
+###Analysis Question 2  
 
-Estimating market value of a home for sale has significant implications for all parties involved in the transaction : seller, buyer, agents, mortgage providers and even local taxing authorities. Getting it right can improve local economies. Inefficiencies associated to historical methods of value assessments create hesitation on the part of buyers and lenders, and potential loss of revenue for sellers and agents. Developing a model that considers all available factors and provides a transparent valuation that can be shared among all parties in the transaction can enable the participants to proceed with increased confidence, thus increasing the velocity of the local real estate market.
-That is the purpose of this evaluation : use all available contributing factors for the residnetial real estate market in Ames, Iowa and create a predicitve model to better estimate market valuation for future properties to be proposed for sale.
 
-For this evaluation, there are seventy-nine explanatory variables available for exploitation, based on residential sales in the years 2006 trough 2010, comprising approximately 1500 sales. The explanatory variables include traditional expected characteristics, such as : neighborhood, square footage, number of bedrooms, number of bathrooms, etc. and also several factors that are perhaps considered secondary or tertiary, but are included in the modeling to increase predictive capability. Some of these additional factors include : heating type, number of fireplaces, qualitative assessment of the kitchen condition.
-
-In order to build the model, the following steps are taken :
-+ read in the raw training data set provided,  
-+ basic cleaning of the data, including removing significant outliers (for this purpose, more than 5 std deviations from mean)  
-+ imputing values for features where none was provided (for this purpose, setting to min value for numeric features, and creating a new factor level "None" for categorical features),  
-+ plot and visually examine each feature in relation to log(SalePrice) ...  
-++ this provides a basis for removing some features from consideration based on inspection  
-++ some features may have 1400 / 1460 within same cateegory, thus not providing varaibility worthwhile including in a model  
-++ some numerical features are sparesely populated, and the the few values visually exhibit zero slope in relation to log(SalePrice)  
-++ a new feature was created "saledate" from the "year sold" and "month sold" features. Upon visual examination, there was no obvious trend in the time series view for  log(SalePrice)s, so this was eventually discarded (surprisingly, considering that the time period spanned the economic downturn to 2007 - 2009).   
-++ this visual examination then results in eliminating approximately 25 of the features from consideration in the model.  
-++ (All of the plots are available for review in the appendix, "homes_train_plots.pdf", if desired for review)
-
-#### __Models Considered__  
-
-In all cases, the basic data set consists of 52 predictor variables and the dependent output variable log(SalePrice)
-
-Four different models are built :
-			Stepwise  - using the R package stepAIC()  
-			Forward   - using the R package stepAIC()  
-			Backward  - using the R package stepAIC()  
-			CUSTOM 	- this method using an iterative loop to evaluate the VIF for each contributor in the current model, eliminates the feature with the highest VIF, and continues until max(VIF) remaining in the model is < 5  
   
-		Checking Assumptions   
-			Residual Plots  
-			- the following plots show the distribution of residuals and the predicted vs. the actual sale price (log scale) for the custom model. From these plots, we consider that the basic assumptions of normality in the residuals is achieved, and that the visual aspect of the fitted model aligns well with the dependent variable to be modeled.
-
-			
-![Residual Plots](custom_model.png)
-	
-			Influential point analysis (Cook’s D and Leverage)  
-			- Cook's Distance is assessed for the fitted model : all values are significantly less than 1; with this large data set, there are no individual points which are signficantly affecting model resutls, either from perspective of leverage or influence based on Cook's distance for this model. Thus, model is apprpriate to maintain the complete modeled data set.
-
-		Comparing Competing Models  
-		
-			Adj R2     
-			- forward : 0.93
-			- backward : 0.93
-			- step : 0.93
-			- custom : 0.90
-			
-			Kaggle Score   
-			- forward : 0.38
-			- backward : 0.38
-			- step : 0.38
-			- custom : 0.24
-			
-  
-		Conclusion: 
-		- For this effort, the 4 models each provide good predictive capability for estimating market valuation of residential to be proposed for offering in the Ames, Iowa market. The custom model outperformed the stepwise, forward addition and backward elimination methods for the features chosen in this case.
-	  
-  
-```{r read data}
+```{r read data, include = FALSE, message = FALSE}
 
 	setwd(data_dir)
 	homes <- read.csv("train.csv", stringsAsFactors = FALSE)
@@ -136,7 +45,7 @@ Four different models are built :
 	}
 ```
 
-```{r remove outliers}
+```{r remove outliers, include = FALSE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	remove outliers ... more than 5 sigma from mean value
@@ -155,7 +64,7 @@ Four different models are built :
 
 ```
 
-```{r new and scale}
+```{r new and scale, include = FALSE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	create a few new columns
@@ -178,7 +87,7 @@ Four different models are built :
 
 ```
 
-```{r plot base data}
+```{r plot base data, include = FALSE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	make some plots for numberic variables... linear, log_x, log_y, log_xy ...
@@ -217,7 +126,7 @@ Four different models are built :
 #	dev.off()
 ```
 
-```{r first basic fit} 
+```{r first basic fit, echo = TRUE, message = FALSE} 
 
 	for (i in 2:(length(homes)))
 	{
@@ -225,19 +134,78 @@ Four different models are built :
 		{
 			fit <- lm(homes$saleprice ~ homes[,i])
 			
-			print(sprintf(" ... %3d : %20s | r^2 = %8.3f | p-value = %12.4e",
-						  i, names(homes[i]), summary(fit)$r.squared, summary(fit)$coefficients[,4][2] ))
+			print(sprintf(" ... %3d : %20s | %10s | r^2 = %8.3f | p-value = %12.4e",
+						  i, names(homes[i]), class(homes[,i]), summary(fit)$r.squared, summary(fit)$coefficients[,4][2] ))
 		}
 	}
 
 ```
 
-``` {r visual removals}
+```{r impute, include = FALSE, message = FALSE}
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	Impute NAs to functional value
+# ...
+# ...	--> for numerical variables - impute to mean value in column
+# ...	--> for factor variables - create new factor "None"
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	for (i in 1 : (length(homes)))
+	{
+		if(class(homes[,i]) == "integer" || class(homes[,i]) == "numeric" || class(homes[,i]) == "matrix")
+		{
+			homes[,i][is.na (homes[,i])] <- min (homes[,i], na.rm = TRUE)
+		}
+	}
+	
+	for (i in 1 : (length(homes)))
+	{
+		if(class(homes[,i]) == "factor")
+		{
+			levels <- levels(homes[,i])
+			levels[length(levels) + 1] <- "None"
+			homes[,i] <- factor(homes[,i], levels = levels)
+			homes[,i][is.na (homes[,i])] <- "None"
+		}
+	}
+
+```
+
+
+``` {r visual removals, include = FALSE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	Columns to remove - based on visual inspection
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+# ...	save top 20 (based on r^2) for trial evaluation in SAS
+
+	homes$log_saleprice <- log(homes$saleprice)
 	
+	homes_top20 <- subset(homes, select = c(
+			log_saleprice,
+			masvnrtype,
+			overallcond,
+			garagearea,
+			totalbsmtsf,
+			electrical,
+			kitchenqual,
+			garagetype,
+			enclosedporch,
+			exterqual,
+			extercond,
+			heatingqc,
+			functional,
+			landslope,
+			grlivarea,
+			bsmtfintype2,
+			bsmtunfsf,
+			bsmtexposure,
+			lotarea,
+			bsmtfinsf1,
+			bsmtfullbath))
+
+
 	homes_subset <- subset(homes, select = -c(
 		id,
 		mssubclass,
@@ -266,61 +234,37 @@ Four different models are built :
 		exterior2nd,
 		bsmtcond,
 		bsmtfintype1,
-		garagefinish ))
+		garagefinish,
+		saleprice,
+		sale_date ))
 
-```
-
-```{r impute}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# ...	Impute NAs to functional value
-# ...
-# ...	--> for numerical variables - impute to min value in
-# ...	--> for factor variables - create new factor "None"
+# ...	store reference data frame as base data set
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-	for (i in 1 : (length(homes_subset)))
-	{
-		if(class(homes_subset[,i]) == "integer" || class(homes_subset[,i]) == "numeric" || class(homes_subset[,i]) == "matrix")
-		{
-			homes_subset[,i][is.na (homes_subset[,i])] <- min (homes_subset[,i], na.rm = TRUE)
-		}
-	}
 	
-	for (i in 1 : (length(homes_subset)))
-	{
-		if(class(homes_subset[,i]) == "factor")
-		{
-			levels <- levels(homes_subset[,i])
-			levels[length(levels) + 1] <- "None"
-			homes_subset[,i] <- factor(homes_subset[,i], levels = levels)
-			homes_subset[,i][is.na (homes_subset[,i])] <- "None"
-		}
-	}
+		homes_subset_base <- homes_subset
 
+	
 ```
 
-```{r save subsetted data}
 
-	homes_subset$log_saleprice <- log(homes_subset$saleprice)
-	
-	homes_subset <- subset(homes_subset, select = -c(saleprice, sale_date))
-	
+```{r save subsetted data, include = FALSE, message = FALSE}
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	save data frame for SAS input file
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 	sas_dir <- "~/sas/SASUniversityEdition/myfolders/"
 	setwd(sas_dir)
-	write.csv (homes_subset, file = "training_set_cleaned.csv", row.names = FALSE)
+	write.csv (homes_top20, file = "training_set_top20_cleaned.csv", row.names = FALSE)
+	
 	setwd(home_dir)
-
-# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# ...	save base data set for multiple solution options
-# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-	homes_subset_base <- homes_subset
 
 ```
 
 
-```{r custom model}
+```{r custom model, echo = TRUE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	base model on all candidate features
@@ -328,22 +272,28 @@ Four different models are built :
 
 	homes_subset <- homes_subset_base
 
-	df_fits <- data.frame(row = integer(0), feature = character(0), r_squared = numeric(0), stringsAsFactors = FALSE)
+	df_fits <- data.frame(row = integer(0),
+						  feature = character(0),
+						  type = character(0), 
+						  r_squared = numeric(0),
+						  stringsAsFactors = FALSE)
 	
 	for (i in 1 : (length(homes_subset)))
 	{
 			fit <- lm(homes_subset$log_saleprice ~ homes[,i])
 			
-			print(sprintf(" ... %3d : %20s | r^2 = %8.3f | p-value = %12.4e",
-						  i, names(homes_subset[i]), summary(fit)$r.squared,
+			print(sprintf(" ... %3d : %20s | %10s | r^2 = %8.3f | p-value = %12.4e",
+						  i, names(homes_subset[i]), class(homes_subset[,i]), summary(fit)$r.squared,
 						  		summary(fit)$coefficients[,4][2] ))
 			
-			next_row <- data.frame(row = i, feature = names(homes_subset[i]),
+			next_row <- data.frame(row = i, feature = names(homes_subset[i]), type = class(homes_subset[,i]),
 								   r_squared = summary(fit)$r.squared)
 			df_fits <- rbind(df_fits, next_row)
 	}
 
 	df_sort <- df_fits[with(df_fits, order(-r_squared)), ]
+	
+	df_sort
 	
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	do some feature reduction based on VIF
@@ -392,7 +342,7 @@ Four different models are built :
 # ...	plot some residuals and influence diagnostics plots
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-	png(filename = "custom_model.png", width = 2100, height = 700, units = "px")
+	png(filename = "custom_model.png", width = 2200, height = 1100, units = "px")
 	
 	par (mfrow = c (2, 2))
 	
@@ -442,7 +392,7 @@ Four different models are built :
 	
 ```
 
-```{r forward}
+```{r forward, include = FALSE, message = FALSE}
 	
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 #  ...	Stepwise Regression - Forward
@@ -477,7 +427,7 @@ library (MASS)
 
 ```
 
-```{r backward}
+```{r backward, include = FALSE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 #  ...	Stepwise Regression - Backward
@@ -506,7 +456,7 @@ library (MASS)
 
 ```
 
-```{r stepwise}
+```{r stepwise, include = FALSE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 #  ...	Stepwise Regression - both
@@ -536,3 +486,42 @@ library (MASS)
 	write.csv(df_submit_both, file = "submit_test_pred_both_selection.csv", row.names = FALSE)
 
 ```
+
+
+
+```{r sas forward, include = FALSE, message = FALSE}
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#  ...	SAS Forward Selection 
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+library (MASS)
+	
+	homes_subset <- homes_subset_base
+
+	fit_sas_fwd <- lm (log_saleprice ~
+					grlivarea + exterqual + 
+					totalbsmtsf + garagetype + garagearea + overallcond + 
+					bsmtfinsf1 + kitchenqual + heatingqc + bsmtexposure + 
+					functional + lotarea + enclosedporch + bsmtunfsf,
+					data = homes_subset)
+	
+
+	plot(predict(fit_sas_fwd, newdata = test_homes))
+	
+	test_homes$pred_sas_fwd_log_saleprice <- predict(fit_sas_fwd, newdata = test_homes)
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	submittal file - sas_fwd selection
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	df_submit_sas_fwd <- data.frame(test_homes$id, exp(test_homes$pred_sas_fwd_log_saleprice))
+	names(df_submit_sas_fwd) <- c("Id", "SalePrice")
+	
+	df_submit_sas_fwd$SalePrice[is.na(df_submit_sas_fwd$SalePrice)] <- median(df_submit_sas_fwd$SalePrice, na.rm = TRUE)
+
+	write.csv(df_submit_sas_fwd, file = "submit_test_pred_sas_fwd_selection.csv", row.names = FALSE)
+
+```
+
+
