@@ -1,0 +1,182 @@
+---
+title: "sas_test_submit"
+author: "mcdevitt"
+date: "23 avril 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
+library(MASS)
+library(car)
+
+home_dir <- "~/_smu/_src/home_prices/"
+setwd(home_dir)
+data_dir <- "./data"
+
+```
+
+```{r sas forward, include = TRUE, message = FALSE}
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#  ...	read in test data set
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	setwd(data_dir)
+	test_homes <- read.csv("test.csv", stringsAsFactors = FALSE)
+	setwd(home_dir)
+	
+	names(test_homes) <- tolower(names(test_homes))
+	
+	for (i in 2:(length(test_homes)))
+	{
+		if (class(test_homes[,i]) == "character")
+		{
+			test_homes[,i] <- factor (test_homes[,i])
+		}
+	}
+	
+	test_homes$log_lotfrontage <- log(test_homes$lotfrontage)
+	test_homes$log_lotarea <- log(test_homes$lotarea)
+	test_homes$log_grlivarea <- log(test_homes$grlivarea)
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#  ...	SAS Forward Selection 
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	homes_subset <- homes_subset_base
+
+	fit_sas_fwd <- lm (log_saleprice ~
+					overallqual + log_grlivarea + neighborhood + bsmtfinsf1 + 
+					overallcond + totalbsmtsf + garagecars + yearbuilt + log_lotarea +
+					mszoning + fireplaces + kitchenqual + centralair + yearremodadd + x2ndflrsf +
+					x1stflrsf + bsmtfullbath + totrmsabvgrd + log_lotfrontage,
+					data = homes_subset)
+	
+	plot(predict(fit_sas_fwd, newdata = test_homes))
+	plot(predict(fit_sas_fwd) ~ homes_subset$log_saleprice,
+			main = "Predicted log(Sale Price) vs. Train Set log(Sale Price)")
+
+	test_homes$pred_sas_fwd_log_saleprice <- predict(fit_sas_fwd, newdata = test_homes)
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	submittal file - sas_fwd selection
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	df_submit_sas_fwd <- data.frame(test_homes$id, exp(test_homes$pred_sas_fwd_log_saleprice))
+	names(df_submit_sas_fwd) <- c("Id", "SalePrice")
+	
+	df_submit_sas_fwd$SalePrice[is.na(df_submit_sas_fwd$SalePrice)] <- median(df_submit_sas_fwd$SalePrice, na.rm = TRUE)
+
+	write.csv(df_submit_sas_fwd, file = "submit_test_pred_sas_fwd_selection.csv", row.names = FALSE)
+
+```
+
+
+
+```{r sas backward, include = TRUE, message = FALSE}
+
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#  ...	SAS Backward Selection 
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	homes_subset <- homes_subset_base
+
+	fit_sas_bwd <- lm (log_saleprice ~
+					bsmtfinsf1 + bsmtfintype1 + bsmtfullbath + bsmtqual + centralair +
+					electrical + exterqual + fireplaces + foundation + fullbath +
+					garagearea + garagecars + garagefinish + garagetype + halfbath +
+					heatingqc + housestyle + kitchenqual + log_grlivarea + log_lotarea +
+					log_lotfrontage + lotshape + masvnrtype + mszoning + neighborhood +
+					overallcond + overallqual + totalbsmtsf + totrmsabvgrd + x1stflrsf +
+					x2ndflrsf + yearbuilt + yearremodadd, data = homes_subset)
+	
+	plot(predict(fit_sas_bwd, newdata = test_homes))
+	plot(predict(fit_sas_bwd) ~ homes_subset$log_saleprice,
+			main = "Predicted log(Sale Price) vs. Train Set log(Sale Price)")
+
+	test_homes$pred_sas_bwd_log_saleprice <- predict(fit_sas_bwd, newdata = test_homes)
+	
+	mean_bwd_pred <- mean(test_homes$pred_sas_bwd_log_saleprice, na.rm = TRUE)
+	
+	test_homes$pred_sas_bwd_log_saleprice[is.na (test_homes$pred_sas_bwd_log_saleprice)] <- mean_bwd_pred
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	submittal file - sas_bwd selection
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	df_submit_sas_bwd <- data.frame(test_homes$id, exp(test_homes$pred_sas_bwd_log_saleprice))
+	names(df_submit_sas_bwd) <- c("Id", "SalePrice")
+	
+	df_submit_sas_bwd$SalePrice[is.na(df_submit_sas_bwd$SalePrice)] <- median(df_submit_sas_bwd$SalePrice, na.rm = TRUE)
+
+	write.csv(df_submit_sas_bwd, file = "submit_test_pred_sas_bwd_selection.csv", row.names = FALSE)
+
+```
+
+
+
+
+
+
+```{r sas Stepwise, include = TRUE, message = FALSE}
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#  ...	SAS Stepwise Selection 
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	homes_subset <- homes_subset_base
+
+	fit_sas_stp <- lm (log_saleprice ~ bsmtfinsf1 + centralair + fireplaces +
+					   	garagecars + kitchenqual + log_grlivarea + log_lotarea +
+					   	mszoning + neighborhood + overallcond + overallqual +
+					   	totalbsmtsf + yearbuilt + yearremodadd, data = homes_subset)
+	
+	plot(predict(fit_sas_stp, newdata = test_homes))
+	plot(predict(fit_sas_stp) ~ homes_subset$log_saleprice,
+			main = "Predicted log(Sale Price) vs. Train Set log(Sale Price)")
+
+	test_homes$pred_sas_stp_log_saleprice <- predict(fit_sas_stp, newdata = test_homes)
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	submittal file - sas_stp selection
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	df_submit_sas_stp <- data.frame(test_homes$id, exp(test_homes$pred_sas_stp_log_saleprice))
+	names(df_submit_sas_stp) <- c("Id", "SalePrice")
+	
+	df_submit_sas_stp$SalePrice[is.na(df_submit_sas_stp$SalePrice)] <- median(df_submit_sas_stp$SalePrice, na.rm = TRUE)
+
+	write.csv(df_submit_sas_stp, file = "submit_test_pred_sas_stp_selection.csv", row.names = FALSE)
+
+```
+
+
+
+```{r model of models, include = TRUE, message = FALSE}
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#  ...	recommender model based on gln models
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	test_homes$pred_sas_avg3_log_saleprice <-
+				rowMeans(subset(test_homes,
+				select = c(pred_sas_fwd_log_saleprice,
+						   pred_sas_bwd_log_saleprice,
+						   pred_sas_stp_log_saleprice), na.rm = TRUE))
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	submittal file - mom selection
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	df_submit_mom <- data.frame(test_homes$id, exp(test_homes$pred_sas_avg3_log_saleprice))
+	names(df_submit_mom) <- c("Id", "SalePrice")
+	
+	df_submit_mom$SalePrice[is.na(df_submit_mom$SalePrice)] <- median(df_submit_mom$SalePrice, na.rm = TRUE)
+
+	write.csv(df_submit_mom, file = "submit_test_pred_mom_selection.csv", row.names = FALSE)
+
+```

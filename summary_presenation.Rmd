@@ -43,14 +43,14 @@ For this evaluation, there are seventy-nine explanatory variables available for 
   
 #### __Model Construction__  
 
-In order to build the model, the following steps are taken :
+In order to build the model, the following steps are taken :  
 * read in the raw training data set provided,  
 * basic cleaning of the data, including removing significant outliers (for this purpose, more than 5 std deviations from mean)  
-* imputing values for features where none was provided (for this purpose, setting to min value for numeric features, and creating a new factor level "None" for categorical features),  
+* imputing values for features where none was provided (for this purpose, setting to mean value for numeric features, and creating a new factor level "None" for categorical features),  
  * plot and visually examine each feature in relation to log(SalePrice) ...  
 + this provides a basis for removing some features from consideration based on inspection  
   	+ some features may have 1400 / 1460 within same cateegory, thus not providing varaibility worthwhile including in a model  
-  	+ some numerical features are sparesely populated, and the the few values visually exhibit zero slope in relation to log(SalePrice)  
+  	+ some numerical features are sparsely populated, and the the few values visually exhibit zero slope in relation to log(SalePrice)  
   	+ a new feature was created "saledate" from the "year sold" and "month sold" features. Upon visual examination, there was no obvious trend in the time series view for  log(SalePrice)s, so this was eventually discarded (surprisingly, considering that the time period spanned the economic downturn to 2007 - 2009).   
   	+ this visual examination then results in eliminating approximately 25 of the features from consideration in the model.  
   	+ (All of the plots are available for review in the appendix, "homes_train_plots.pdf", if desired for review)
@@ -62,9 +62,9 @@ In order to build the model, the following steps are taken :
 In all cases, the basic data set consists of 52 predictor variables and the dependent output variable log(SalePrice)
 
 Four different models are built :  
-	*		Stepwise  - using the R package stepAIC()  
-	*		Forward   - using the R package stepAIC()  
-	*		Backward  - using the R package stepAIC()  
+	*		Stepwise  - modeled in SAS proc glmselect  
+	*		Forward   - modeled in SAS proc glmselect  
+	*		Backward  - modeled in SAS proc glmselect  
 	*		CUSTOM 	- this method using an iterative loop to evaluate the VIF for each contributor in the current model, eliminates the feature with the highest VIF, and continues until max(VIF) remaining in the model is < 5  
   
   ***  
@@ -73,32 +73,39 @@ Four different models are built :
 * the following plots show the distribution of residuals and the predicted vs. the actual sale price (log scale) for the custom model. From these plots, we consider that the basic assumptions of normality in the residuals is achieved, and that the visual aspect of the fitted model aligns well with the dependent variable to be modeled. For brevity's sake, the only plots shown here are for the custom model. The residuals plots for the other models assessed were similar in nature.
 
 			
-![Residual Plots](custom_model.png)
+![Residual Plots - SAS Stepwsie Model Results](sas_step.png)
 	
 #### __Influential point analysis (Cook’s D and Leverage)__  
-* Similarly, the Cook's Distance is assessed for the fitted model : all values are significantly less than 1; with this large data set, there are no individual points which are signficantly affecting model resutls, either from perspective of leverage or influence based on Cook's distance for this model. Thus, model is appropriate to maintain the complete modeled data set. This is shown in the above figure.
+
+Test for assumptions:
+
+* Normality: From QQ plot, scatter and histogram, normality is generally respected. The residuals histogram and QQ plot show a slight tendency towards left skewness. With next modeling attempts, this is an area for potential improvement. 
+
+* Linearity: Looking at the residual plots we can make an assumption of linearity. There is reasonably equal distribution of residsuals for the data modeled in this manner.
+
+* Equal variance: After log transformation, since none of the plot looks too bad, we continue with our model.
+
+* Cook's D and the Leverage Plots show a few influential points. The leverage plot, in particular, shows 2 points with relatively high leverage; however in this model, with 1400+ additional data points, the influence of these 2 points is not substantial.
 
 ***  
 
 #### __Comparing Competing Models__  
 		
-#### Adj R2     
-			- forward : 0.93
-			- backward : 0.93
-			- step : 0.93
-			- custom : 0.90
-			
-#### Kaggle Score   
-			- forward : 0.38
-			- backward : 0.38
-			- step : 0.38
-			- custom : 0.24
+
+ Model           | Adj R²      |  CV Press  | Kaggle Score  
+---------------- | ------------|------------|--------------
+Forward          |   0.91      |   22.10    |  0.189  
+Backward         |   0.92      |   23.17    |  0.226  
+Stepwise         |   0.91      |   22.13    |  0.133 
+Custom           |   0.90      |            |  0.225
+
 
 ***  			
   
 ### __Conclusion:__   
 
-* For this effort, the 4 models each provide good predictive capability for estimating market valuation of residential real estate to be proposed for offering in the Ames, Iowa market. The custom model outperformed the stepwise, forward addition and backward elimination methods for the features chosen in this case.  
+* For this effort, the 4 models each provide good predictive capability for estimating market valuation of residential real estate to be proposed for offering in the Ames, Iowa market.  
+* The stepwise model outperformed the other selection methods for the features chosen in this case. In addition, the stepwise selection also resulted in the least number of features (14) in comparison, also providing a simpler model. The table above 
 
 ***  
 
@@ -111,4 +118,139 @@ The complete set of plots used to downselect to the modeled features along with 
 
 The screen shot of the Kaggle scores associated to this model is found at this location : https://github.com/bici-sancta/home_prices/blob/master/kaggle_scores.png
 	 
-***
+***  
+
+### __SAS Codes__
+
+
+Question 1
+
+
+
+
+#### __Question 2__  
+(stewise selection, as that produced the best model of those considered)
+
+```{r SAS code, eval = FALSE}
+
+proc datasets lib=work kill nolist memtype=data;
+quit;
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...		The cleaned data set was obtained by some R code processing
+# ...		the R code for the data cleaning can be found at :
+# ...		the cleaned data set itself can be found at this location :
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+FILENAME REFFILE '/folders/myfolders/training_set_cleaned.csv';
+
+PROC IMPORT DATAFILE=REFFILE
+	DBMS=CSV
+	OUT = training_set;
+	GETNAMES=YES;
+RUN;
+
+PROC CONTENTS DATA = training_set; RUN;
+
+/*
+proc print data = training_set;
+run;
+*/
+
+ods graphics on;
+
+proc glmselect data = training_set plots = all;
+class bsmtfintype1
+	bsmtqual
+	centralair
+	electrical
+	exterior1st
+	exterior2nd
+	exterqual
+	fireplacequ
+	foundation
+	garagefinish
+	garagetype
+	heatingqc
+	housestyle
+	kitchenqual
+	lotshape
+	masvnrtype
+	mszoning
+	neighborhood
+	saletype;
+model log_saleprice =
+			bsmtfinsf1
+			bsmtfintype1
+			bsmtfullbath
+			bsmtqual
+			centralair
+			electrical
+			exterior1st
+			exterior2nd
+			exterqual
+			fireplacequ
+			fireplaces
+			foundation
+			fullbath
+			garagearea
+			garagecars
+			garagefinish
+			garagetype
+			halfbath
+			heatingqc
+			housestyle
+			kitchenqual
+			log_grlivarea
+			log_lotarea
+			log_lotfrontage
+			lotshape
+			masvnrtype
+			mszoning
+			neighborhood
+			overallcond
+			overallqual
+			saletype
+			totalbsmtsf
+			totrmsabvgrd
+			x1stflrsf
+			x2ndflrsf
+			yearbuilt
+			yearremodadd 
+			/selection = stepwise(stop = cv) cvmethod = random(5) showpvalues;
+run;
+
+ods graphics off;
+
+/* features retained by stepwsie selection (2017.04.23) */
+
+ods graphics on;
+proc glm data = training_set plots=diagnostics;
+class centralair
+	kitchenqual
+	mszoning
+	neighborhood;
+model log_saleprice =
+	bsmtfinsf1
+	centralair
+	fireplaces
+	garagecars
+	kitchenqual
+	log_grlivarea
+	log_lotarea
+	mszoning
+	neighborhood
+	overallcond
+	overallqual
+	totalbsmtsf
+	yearbuilt
+	yearremodadd
+	/solution;
+run;
+ods graphics off;
+
+
+
+
+```

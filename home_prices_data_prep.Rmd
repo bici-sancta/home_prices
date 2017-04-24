@@ -121,7 +121,7 @@ data_dir <- "./data"
 		}
 	}	
 		
-			plot(homes$saleprice ~ homes$sale_date)
+			plot(log(homes$saleprice) ~ homes$sale_date)
 
 #	dev.off()
 ```
@@ -132,7 +132,7 @@ data_dir <- "./data"
 	{
 		if(class(homes[,i]) == "integer" || class(homes[,i]) == "numeric" || class(homes[,i]) == "matrix")
 		{
-			fit <- lm(homes$saleprice ~ homes[,i])
+			fit <- lm(log(homes$saleprice) ~ homes[,i])
 			
 			print(sprintf(" ... %3d : %20s | %10s | r^2 = %8.3f | p-value = %12.4e",
 						  i, names(homes[i]), class(homes[,i]), summary(fit)$r.squared, summary(fit)$coefficients[,4][2] ))
@@ -171,6 +171,23 @@ data_dir <- "./data"
 
 ```
 
+```{r update r^2 after imputation, echo = TRUE, message = FALSE} 
+
+	for (i in 2:(length(homes)))
+	{
+		if(class(homes[,i]) == "integer" || class(homes[,i]) == "numeric" || class(homes[,i]) == "matrix")
+		{
+			fit <- lm(log(homes$saleprice) ~ homes[,i])
+			
+			print(sprintf(" ... %3d : %20s | %10s | r^2 = %8.3f | p-value = %12.4e",
+						  i, names(homes[i]), class(homes[,i]), summary(fit)$r.squared, summary(fit)$coefficients[,4][2] ))
+		}
+	}
+
+```
+
+
+
 
 ``` {r visual removals, include = FALSE, message = FALSE}
 
@@ -180,73 +197,67 @@ data_dir <- "./data"
 
 # ...	save top 20 (based on r^2) for trial evaluation in SAS
 
+	homes$log_lotfrontage <- log(homes$lotfrontage)
+	homes$log_lotarea <- log(homes$lotarea)
 	homes$log_grlivarea <- log(homes$grlivarea)
 	homes$log_saleprice <- log(homes$saleprice)
 	
-	homes_top20 <- subset(homes,
+	homes_sas_keep <- subset(homes,
 			select = c(
 				log_saleprice,
-				masvnrtype,
-				overallcond,
-				garagearea,
-				totalbsmtsf,
-				electrical,
-				kitchenqual,
-				garagetype,
-				enclosedporch,
-				exterqual,
-				extercond,
-				heatingqc,
-				functional,
-				landslope,
-				log_grlivarea,
-				bsmtfintype2,
-				bsmtunfsf,
-				bsmtexposure,
-				lotarea,
-				bsmtfinsf1,
-				bsmtfullbath)
-			)
-
-
-	homes_subset <- subset(homes,
-			select = -c(
-				id,
-				mssubclass,
-				street,
-				alley,
-				utilities,
-				condition2,
-				roofmatl,
-				centralair,
-				bsmtfinsf2,
-				fence,
-				miscfeature,
-				lowqualfinsf,
-				bsmthalfbath,
-				kitchenabvgr,
-				x3ssnporch,
-				screenporch,
-				garagequal,
-				garagecond,
-				paveddrive,
-				poolarea,
-				poolqc,
-				miscval,
-				mosold,
-				yrsold,
-				exterior2nd,
-				bsmtcond,
-				bsmtfintype1,
-				garagefinish,
-				saleprice,
-				sale_date ))
+			bsmtfinsf1,
+			bsmtfintype1,
+			bsmtfullbath,
+			bsmtqual,
+			centralair,
+			electrical,
+			exterior1st,
+			exterior2nd,
+			exterqual,
+			fireplacequ,
+			fireplaces,
+			foundation,
+			fullbath,
+			garagearea,
+			garagecars,
+			garagefinish,
+			garagetype,
+			grlivarea,
+			halfbath,
+			heatingqc,
+			housestyle,
+			kitchenqual,
+			log_grlivarea,
+			log_saleprice,
+			log_lotarea,
+			log_lotfrontage,
+			lotshape,
+			masvnrtype,
+			mszoning,
+			neighborhood,
+			overallcond,
+			overallqual,
+			saletype,
+			totalbsmtsf,
+			totrmsabvgrd,
+			x1stflrsf,
+			x2ndflrsf,
+			yearbuilt,
+			yearremodadd))
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ... from the keep list , these are the factors :
+# ...	bsmtfintype1, bsmtqual, centralair, electrical, exterior1st, exterior2nd, exterqual,
+# ...	fireplacequ, foundation, garagefinish, garagetype, heatingqc, housestyle, kitchenqual,
+# ...	lotshape, masvnrtype, mszoning, neighborhood, saletype, 
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	store reference data frame as base data set
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	
-		homes_subset_base <- homes_subset
+		homes_subset_base <- homes_sas_keep
 
 ```
 
@@ -259,8 +270,12 @@ data_dir <- "./data"
 
 	sas_dir <- "~/sas/SASUniversityEdition/myfolders/"
 	setwd(sas_dir)
-	write.csv (homes_top20, file = "training_set_top20_cleaned.csv", row.names = FALSE)
+	write.csv (homes_sas_keep, file = "training_set_cleaned.csv", row.names = FALSE)
 	
 	setwd(home_dir)
+	setwd(data_dir)
+	write.csv (homes_sas_keep, file = "training_set_cleaned.csv", row.names = FALSE)
+	setwd(home_dir)
+	
 
 ```
