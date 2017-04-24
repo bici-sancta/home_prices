@@ -1,5 +1,5 @@
 ---
-title: "sas_test_submit"
+title: "sas_kaggle_submit"
 author: "mcdevitt"
 date: "23 avril 2017"
 output: html_document
@@ -15,6 +15,9 @@ library(car)
 home_dir <- "~/_smu/_src/home_prices/"
 setwd(home_dir)
 data_dir <- "./data"
+sas_dir <- "./sas_analysis"
+
+setwd(paste0(home_dir, sas_dir))
 
 ```
 
