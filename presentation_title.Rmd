@@ -1,0 +1,20 @@
+---
+title: "ames iowa home price modeling"
+author: "preeti swaminathan & patrick mcdevitt"
+date: "23 avril 2017"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+## House Prices - à la Kaggle - Homework 13
+  
+***  
+
+###Analysis Question 1  
