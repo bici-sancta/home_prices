@@ -1,0 +1,136 @@
+---
+title: "sas fwd selection"
+author: "squazi & pmcdevitt"
+date: "27 avril 2017"
+output: html_document
+---
+
+
+#### __Question 2 - SAS Code Example__  
+
+(stepwise selection, as that produced the best model of those considered)
+
+```{r SAS code question 2, eval = FALSE}
+
+proc datasets lib=work kill nolist memtype=data;
+quit;
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...		The cleaned data set was obtained by some R code processing
+# ...
+# ...		the R code for the data cleaning can be found at :
+# ...		https://github.com/bici-sancta/home_prices/blob/master/home_prices_data_prep.Rmd
+# ...
+# ...		the cleaned data set itself can be found at this location :
+# ...		https://github.com/bici-sancta/home_prices/blob/master/data/training_set_cleaned.csv
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+FILENAME REFFILE '/folders/myfolders/training_set_cleaned.csv';
+
+PROC IMPORT DATAFILE=REFFILE
+	DBMS=CSV
+	OUT = training_set;
+	GETNAMES=YES;
+RUN;
+
+PROC CONTENTS DATA = training_set; RUN;
+
+/*
+proc print data = training_set;
+run;
+*/
+
+ods graphics on;
+
+proc glmselect data = training_set plots = all;
+class bsmtfintype1
+	bsmtqual
+	centralair
+	electrical
+	exterior1st
+	exterior2nd
+	exterqual
+	fireplacequ
+	foundation
+	garagefinish
+	garagetype
+	heatingqc
+	housestyle
+	kitchenqual
+	lotshape
+	masvnrtype
+	mszoning
+	neighborhood
+	saletype;
+model log_saleprice =
+			bsmtfinsf1
+			bsmtfintype1
+			bsmtfullbath
+			bsmtqual
+			centralair
+			electrical
+			exterior1st
+			exterior2nd
+			exterqual
+			fireplacequ
+			fireplaces
+			foundation
+			fullbath
+			garagearea
+			garagecars
+			garagefinish
+			garagetype
+			halfbath
+			heatingqc
+			housestyle
+			kitchenqual
+			log_grlivarea
+			log_lotarea
+			log_lotfrontage
+			lotshape
+			masvnrtype
+			mszoning
+			neighborhood
+			overallcond
+			overallqual
+			saletype
+			totalbsmtsf
+			totrmsabvgrd
+			x1stflrsf
+			x2ndflrsf
+			yearbuilt
+			yearremodadd 
+			/selection = stepwise(stop = cv) cvmethod = random(5) showpvalues;
+run;
+
+ods graphics off;
+
+/* features retained by stepwsie selection (2017.04.23) */
+
+ods graphics on;
+proc glm data = training_set plots=diagnostics;
+class centralair
+	kitchenqual
+	mszoning
+	neighborhood;
+model log_saleprice =
+	bsmtfinsf1
+	centralair
+	fireplaces
+	garagecars
+	kitchenqual
+	log_grlivarea
+	log_lotarea
+	mszoning
+	neighborhood
+	overallcond
+	overallqual
+	totalbsmtsf
+	yearbuilt
+	yearremodadd
+	/solution;
+run;
+ods graphics off;
+
+```
