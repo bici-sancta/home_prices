@@ -2,7 +2,7 @@
 title: "ames iowa kaggle home price modeling"
 author: "preeti swaminathan & patrick mcdevitt"
 date: "14 avril 2017"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -17,6 +17,7 @@ library(car)
 
 home_dir <- "~/_smu/_src/home_prices/"
 setwd(home_dir)
+
 data_dir <- "./data"
 
 
@@ -28,9 +29,11 @@ data_dir <- "./data"
 
 
   
-```{r read data, include = FALSE, message = FALSE}
+```{r read data, include = TRUE, message = FALSE}
 
+	setwd(home_dir)
 	setwd(data_dir)
+
 	homes <- read.csv("train.csv", stringsAsFactors = FALSE)
 	setwd(home_dir)
 
@@ -45,7 +48,7 @@ data_dir <- "./data"
 	}
 ```
 
-```{r remove outliers, include = FALSE, message = FALSE}
+```{r remove outliers, include = TRUE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	remove outliers ... more than 5 sigma from mean value
@@ -64,7 +67,7 @@ data_dir <- "./data"
 
 ```
 
-```{r new and scale, include = FALSE, message = FALSE}
+```{r new and scale, include = TRUE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	create a few new columns
@@ -87,13 +90,13 @@ data_dir <- "./data"
 
 ```
 
-```{r plot base data, include = FALSE, message = FALSE}
+```{r plot base data, include = TRUE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	make some plots for numberic variables... linear, log_x, log_y, log_xy ...
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-#	pdf ("homes_train_plots.pdf", width = 10, height = 7)
+	pdf ("homes_train_plots.pdf", width = 10, height = 7)
 
 	par (mfrow = c (2, 3))
 	for (i in 2:(length(homes)))
@@ -123,7 +126,7 @@ data_dir <- "./data"
 		
 			plot(log(homes$saleprice) ~ homes$sale_date)
 
-#	dev.off()
+	dev.off()
 ```
 
 ```{r first basic fit, echo = TRUE, message = FALSE} 
@@ -141,7 +144,7 @@ data_dir <- "./data"
 
 ```
 
-```{r impute, include = FALSE, message = FALSE}
+```{r impute, include = TRUE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	Impute NAs to functional value
@@ -189,7 +192,7 @@ data_dir <- "./data"
 
 
 
-``` {r visual removals, include = FALSE, message = FALSE}
+``` {r visual removals, include = TRUE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	Columns to remove - based on visual inspection
@@ -262,7 +265,7 @@ data_dir <- "./data"
 ```
 
 
-```{r save subsetted data, include = FALSE, message = FALSE}
+```{r save subsetted data, include = TRUE, message = FALSE}
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ...	save data frame for SAS input file

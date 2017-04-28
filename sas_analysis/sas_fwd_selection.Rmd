@@ -1,6 +1,6 @@
 ---
 title: "sas fwd selection"
-author: "squazi & pmcdevitt"
+author: "pswaminathan & pmcdevitt"
 date: "27 avril 2017"
 output: html_document
 ---
