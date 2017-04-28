@@ -1,7 +1,9 @@
 ---
-title: 
-author: 
-output: html_document
+title: "null"
+author: "null"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -62,7 +64,7 @@ Four different models are built :
 * the following plots show the distribution of residuals and the predicted vs. the actual sale price (log scale) for the custom model. From these plots, we consider that the basic assumptions of normality in the residuals is achieved, and that the visual aspect of the fitted model aligns well with the dependent variable to be modeled. For brevity's sake, the only plots shown here are for the stepwise selction model. The residuals plots for the other models assessed were similar in nature.
 
 			
-![Residual Plots - SAS Stepwsie Model Results](sas_step.png)
+![Residual Plots - SAS Stepwsie Model Results](../sas_analysis/sas_step.png)
 	
 #### __Influential point analysis (Cook’s D and Leverage)__  
 
