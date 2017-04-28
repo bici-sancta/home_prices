@@ -1,7 +1,9 @@
 ---
-title: 
-author: 
-output: html_document
+title: 'null'
+author: 'null'
+output:
+  pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
