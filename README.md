@@ -30,7 +30,45 @@ Build the most predictive model for sales prices of homes in all of Ames Iowa.  
     3 - SAS procedures can be found in : question_2_summary.Rmd  
 
     4 - create kaggle input file : sas_kaggle_submit.Rmd  
+    
+    5 - All of the data manip/cleaning in R and  used SAS for the regression analysis  
+    
+    
+ ***  
+ 
+ Here is what is included in this repo :  
+ 
+ ***  
+ 
+ * - __./data directory__  
+ 	+ data defintions / descriptions  
+ 	+ test.csv, train.csv supplied data sets from kaggle  
+ 	+ home_prices_data_prep.Rmd   
+ 		- data clean, some visualizatioins plots to aid in feature selection, and produce SAS regression data set  
+ 	+ training_set_cleaned.csv  
+ 		- input data set to build regression model in SAS  
+ 
+ ***  
+ 
+ * - __./sas_analysis directory__  
+	+ sas_fwd_selection.Rmd : SAS code example for forward selection modeling  
+	+ sas_step.png : screen image of results of SAS model, for step selection process  
+	+ submit_test_pred_xxx_selection.csv : prediction .csv files for kaggle scoring  
 
+***  
+  
+ * - __./kaggle directory__  
+ 	+ sas_kaggle_submit.Rmd : after SAS regression models built, use SAS determined features to build predictions from __test.csv__ data set for submittal to kaggle  
+ 	+ kaggle_scores_yyyy.mm.dd.png - screen shot of kaggle scores  
+ 	
+ ***  
+ 
+ * - __./summary directory__  
+ 	+ collection of .docs, .pdf, .html files that combne to make the summary report  
+ 	+ xxxxxx_homework13_yyyy.mm.dd.pdf : submitted file for project  
+ 	+ https://github.com/bici-sancta/home_prices/blob/master/summary/pmcdevitt_pswaminathan_msds_6371_homework13_2017.04.23.pdf  
+ 	
+***  
 
-I did all of the data manip/cleaning in R and just used SAS for the regression analysis.  
+ 		
 
