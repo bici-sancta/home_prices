@@ -1,6 +1,6 @@
 ---
 title: "data_definitions.Rmd"
-author: "squazi & pmcdevitt"
+author: "pmcdevitt"
 date: "27 avril 2017"
 output: html_document
 ---

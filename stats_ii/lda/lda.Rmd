@@ -1,0 +1,111 @@
+---
+title: "LDA"
+author: "pmcdevitt"
+date: "23 juillet 2017"
+output: html_document
+---
+
+
+#### __LDA Assumptions__  
+
+ * Common mean vector for each population  
+ * Independently sampled subjects  
+ * Multivariate normally distributed data  
+ * Variance-covariance matrices for each population as follows:  
+ 	- Linear discriminant analysis: Σ1 = Σ2 = ... = Σg  
+ 	- Quadratic discriminant analysis: Σi ≠ Σj  
+ 	
+
+Data Overview  
+
+    There are three types of input data:  
+        Groups to be discriminated (e.g., counterfeit or genuine bank notes)  
+        Objects within the groups (e.g., bank notes of both types)  
+        Quantitative predictor variables (e.g., length, diagonal, etc.)  
+    Groups of objects are mutually exclusive  
+    Every object is measured on same set of predictor variables  
+    Groups may have different numbers of objects  
+    
+
+Discriminant Function
+
+    Discriminant function: weighted linear function of predictor variables that classifies an object into one of the groups  
+        L = b1x1 + b2x2 + ... bkxk  
+    Discriminant score of an object: calculated using object's values for predictor variables  
+
+
+Decision Rule
+
+    Classifies an object with measurements x1, x2, ... , xk into group with largest linear score function  
+        Linear score function: computed for each population  
+        Parameters μ and Σ: estimated from data  
+            Σ does not depend on population from which we sample  
+        Prior probabilities: estimated from training data  
+
+
+Review of Discriminant Analysis
+
+    Objective: use a "training set" to develop a classification rule based on a classifier that partitions the space of all possible x's into k disjoint subsets (A1, ..., Ak)  
+        Let x* be a new feature expression profile whose class membership is unknown.  
+        If x* is in As, then x* is predicted to belong to class s.
+    Bayesian score analysis can be used to determine probability of class membership.  
+    
+    
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list=ls())
+
+library(ggplot2)
+library(MASS)
+library(car)
+
+home_dir <- "~/_smu/_src/home_prices/"
+setwd(home_dir)
+
+data_dir <- "./data"
+
+
+```
+
+    
+```{r read in cleaned data set, include = TRUE, message = FALSE}
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	save data frame for SAS input file
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	setwd(home_dir)
+	setwd(data_dir)
+	homes <- read.csv (file = "training_set_cleaned.csv", stringsAsFactors = FALSE)
+	setwd(home_dir)
+	
+	names(homes) <- tolower(names(homes))
+	
+	for (i in 2:(length(homes)))
+	{
+		if (class(homes[,i]) == "character")
+		{
+			homes[,i] <- factor (homes[,i])
+		}
+	}
+
+	
+``` 
+
+
+```{r estimate prior for foundation type, include = TRUE, message = FALSE}
+
+fndtn_counts <- data.frame(summary(homes$foundation))
+colnames(fndtn_counts) <- c("count")
+fndtn_counts$pct <- fndtn_counts$count/sum(fndtn_counts$count)
+
+
+```
+
+
+
+
+    
+
