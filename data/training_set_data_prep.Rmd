@@ -236,8 +236,11 @@ lda_dir <- "./stats_ii/lda"
 # ...	Columns to retain - based on visual inspection of histograms / boxplots
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+	homes$log_saleprice <- log(homes$saleprice)
+
 	homes_lda_keep <- subset(homes,
 			select = c(
+				log_saleprice,
 				foundation,
 				lotfrontage, # ... wood
 				overallqual,
