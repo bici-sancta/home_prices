@@ -7,7 +7,7 @@
 home_dir <- "~/_smu/_src/home_prices/"
 data_dir <- "./data"
 lda_dir <- "./stats_ii/lda"
-
+sas_analysis_dir <- "./stats_i/sas_analysis"
 sas_dir <- "~/sas/SASUniversityEdition/myfolders/stats_ii"
 
 setwd(home_dir)
@@ -72,11 +72,26 @@ setwd(home_dir)
 	
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# ...	Columns to retain for LDA - based on visual inspection of histograms / boxplots
+# ...	read in predicted sale prices
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-	test_homes_lda_keep <- subset(test_homes,
+	setwd(home_dir)
+	setwd(sas_analysis_dir)
+	test_pred <- read.csv("submit_test_pred_sas_stp_selection.csv", stringsAsFactors = FALSE)
+	
+	setwd(home_dir)
+	names(test_pred) <- tolower(names(test_pred))
+	test_homes_w_pred <- merge(test_homes, test_pred, by = "id")
+	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	Columns to retain for LDA - based on visual inspection of histograms / boxplots
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	
+		test_homes_w_pred$log_saleprice <- log(test_homes_w_pred$saleprice)
+		
+		test_homes_lda_keep <- subset(test_homes_w_pred,
 			select = c(
+				log_saleprice,
 				lotfrontage, # ... wood
 				overallqual,
 				overallcond,
