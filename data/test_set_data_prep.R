@@ -91,6 +91,7 @@ setwd(home_dir)
 		
 		test_homes_lda_keep <- subset(test_homes_w_pred,
 			select = c(
+				foundation,
 				log_saleprice,
 				lotfrontage, # ... wood
 				overallqual,
