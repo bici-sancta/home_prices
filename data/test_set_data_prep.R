@@ -64,11 +64,57 @@ setwd(home_dir)
 	test_homes$log_lotarea <- log(test_homes$lotarea)
 	test_homes$log_grlivarea <- log(test_homes$grlivarea)
 	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	keep same columns as training data set
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	
-	write.csv(test_homes, file = "test_set_cleaned.csv", row.names = FALSE)
+	test_homes_sas_keep <- subset(test_homes,
+			select = c(
+			id,
+			bsmtfinsf1,
+			bsmtfintype1,
+			bsmtfullbath,
+			bsmtqual,
+			centralair,
+			electrical,
+			exterior1st,
+			exterior2nd,
+			exterqual,
+			fireplacequ,
+			fireplaces,
+			foundation,
+			fullbath,
+			garagearea,
+			garagecars,
+			garagefinish,
+			garagetype,
+			halfbath,
+			heatingqc,
+			housestyle,
+			kitchenqual,
+			log_grlivarea,
+			log_lotarea,
+			log_lotfrontage,
+			lotshape,
+			masvnrtype,
+			mszoning,
+			neighborhood,
+			overallcond,
+			overallqual,
+			saletype,
+			totalbsmtsf,
+			totrmsabvgrd,
+			x1stflrsf,
+			x2ndflrsf,
+			yearbuilt,
+			yearremodadd))
+
+	
+	
+	write.csv(test_homes_sas_keep, file = "test_set_cleaned.csv", row.names = FALSE)
 	
 	setwd(sas_dir)
-	write.csv (test_homes, file = "test_set_cleaned.csv", row.names = FALSE)
+	write.csv (test_homes_sas_keep, file = "test_set_cleaned.csv", row.names = FALSE)
 	
 
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

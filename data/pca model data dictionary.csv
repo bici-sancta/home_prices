@@ -1,0 +1,58 @@
+variable,type,number levels (factors)
+log_saleprice,num,
+bsmtfinsf1,num,
+bsmtfullbath,num,
+fireplaces,num,
+fullbath,num,
+garagearea,num,
+garagecars,num,
+halfbath,num,
+log_grlivarea,num,
+log_lotarea,num,
+log_lotfrontage,num,
+overallcond,num,
+overallqual,num,
+totalbsmtsf,num,
+totrmsabvgrd,num,
+x1stflrsf,num,
+x2ndflrsf,num,
+yearbuilt,num,
+yearremodadd,num,
+bsmtfintype1,factor," 7 levels ""ALQ"",""BLQ"",""GLQ"",.."
+bsmtqual,factor," 5 levels ""Ex"",""Fa"",""Gd"",.."
+centralair,factor," 3 levels ""N"",""Y"",""None"""
+electrical,factor," 6 levels ""FuseA"",""FuseF"",.."
+exterior1st,factor," 16 levels ""AsbShng"",""AsphShn"",.."
+exterior2nd,factor," 17 levels ""AsbShng"",""AsphShn"",.."
+exterqual,factor," 5 levels ""Ex"",""Fa"",""Gd"",.."
+fireplacequ,factor," 6 levels ""Ex"",""Fa"",""Gd"",.."
+foundation,factor," 7 levels ""BrkTil"",""CBlock"",.."
+garagefinish,factor," 4 levels ""Fin"",""RFn"",""Unf"",.."
+garagetype,factor," 7 levels ""2Types"",""Attchd"",.."
+heatingqc,factor," 6 levels ""Ex"",""Fa"",""Gd"",.."
+housestyle,factor," 9 levels ""1.5Fin"",""1.5Unf"",.."
+kitchenqual,factor," 5 levels ""Ex"",""Fa"",""Gd"",.."
+lotshape,factor," 5 levels ""IR1"",""IR2"",""IR3"",.."
+masvnrtype,factor," 5 levels ""BrkCmn"",""BrkFace"",.."
+mszoning,factor," 6 levels ""C (all)"",""FV"",.."
+neighborhood,factor," 26 levels ""Blmngtn"",""Blueste"",.."
+saletype,factor," 10 levels ""COD"",""Con"",""ConLD"",.."
+imp_bsmtfinsf1,imputed value flag,
+imp_bsmtfullbath,imputed value flag,
+imp_fireplaces,imputed value flag,
+imp_fullbath,imputed value flag,
+imp_garagearea,imputed value flag,
+imp_garagecars,imputed value flag,
+imp_grlivarea,imputed value flag,
+imp_halfbath,imputed value flag,
+imp_lotarea,imputed value flag,
+imp_lotfrontage,imputed value flag,
+imp_overallcond,imputed value flag,
+imp_overallqual,imputed value flag,
+imp_saleprice,imputed value flag,
+imp_totalbsmtsf,imputed value flag,
+imp_totrmsabvgrd,imputed value flag,
+imp_x1stflrsf,imputed value flag,
+imp_x2ndflrsf,imputed value flag,
+imp_yearbuilt,imputed value flag,
+imp_yearremodadd,imputed value flag,

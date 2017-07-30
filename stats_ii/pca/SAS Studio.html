@@ -1,0 +1,172 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=11; IE=10; IE=9; IE=EDGE" /><!-- THIS MUST BE THE FIRST TAG IN HEAD ELEMENT -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta http-equiv="cleartype" content="on">
+    <!-- styles -->
+
+<!-- SECTION 1 -->
+<link media="screen" rel="stylesheet" href="resources/js/dojo/dijit/themes/corporate/css/help.css" />
+<link media="screen" rel="stylesheet" href="resources/js/dojo/dijit/themes/corporate/corporate.css"  />
+<link media="screen" rel="stylesheet" href="resources/js/dojo/dijit/themes/corporate/css/webdms.css" />
+<link media="screen" rel="stylesheet" href="resources/js/dojo/dijit/themes/corporate/css/signin_page.css" />
+<!--link media="screen" rel="stylesheet" href="resources/js/dojo/dojox/grid/resources/Grid.css" />
+<link media="screen" rel="stylesheet" href="resources/js/dojo/dojox/grid/resources/claroGrid.css" /-->
+
+<!--[if gte IE 9]>
+        <link media="screen" rel="stylesheet" href="resources/js/dojo/dijit/themes/corporate/css/webdms_ie.css" />
+<![endif]-->
+
+<title>SAS Studio</title>
+
+
+<script>
+var userAgent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:54.0) Gecko/20100101 Firefox/54.0";
+var host=null;
+var port=null;
+var dojoLocale='en-us';
+var localeParameter='en_US';
+var javaLocale='en_US';
+var localhost='';
+var webclient='';
+var failureURL='http://support.sas.com/documentation/onlinedoc/sasstudio';
+var autoLoginUser='sasdemo';
+var mode='iomlight';
+var local=true;
+var isCloudSSO = false;
+var skin='SAS';
+var debug = '';
+var production = true;
+var openfileParameter = null;
+var sutoken = null
+var weaverApp = null;
+
+
+var reportApp=null;
+
+
+
+</script>
+
+    <!-- fav and touch icons -->
+<!--     <link rel="shortcut icon" href="assets/ico/favicon.ico">
+    <link rel="apple-touch-icon" href="resources/js/dojo/dijit/themes/corporate/images/ico/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="resources/js/dojo/dijit/themes/corporate/images/ico/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="resources/js/dojo/dijit/themes/corporate/images/ico/apple-touch-icon-114x114.png">
+ -->
+
+<!-- <link rel="shortcut icon"  href="favicon.ico" /> -->
+<link href="resources/js/dojo/dijit/themes/corporate/images/ico/favicon.ico" rel="shortcut icon" type="image/x-icon">
+<!-- Standard iPad -->
+<link rel="apple-touch-icon" sizes="72x72" href="resources/js/dojo/dijit/themes/corporate/images/ico/touch-icon-ipad-144.png" />
+<!-- Retina iPad -->
+<link rel="apple-touch-icon" sizes="144x144" href="resources/js/dojo/dijit/themes/corporate/images/ico/touch-icon-ipad-144.png" />
+
+
+
+<script type="text/javascript">
+	if(dojoLocale == null || dojoLocale == 'null')
+		dojoLocale = window.navigator.language;
+	dojoConfig =
+	{
+		parseOnLoad: true,
+		locale: dojoLocale,
+		
+		baseUrl: 'resources/js',
+		packages: [
+			{
+				name:'dojo',
+				location: 'dojo/dojo'
+			},
+			{
+				name:'dijit',
+				location: 'dojo/dijit'
+			},
+			{
+				name:'dojox',
+				location: 'dojo/dojox'
+			},
+			{
+				name:'webdms',
+				location: 'webdms'
+			},
+			{
+				name: 'studio',
+				location: 'studio'
+			},
+			{
+				name: 'nls',
+				location: 'nls'
+			}
+		
+		]
+		
+	}
+</script>
+
+
+<script type="text/javascript" src="resources/js/dojo/dojo/dojo.js"
+    data-dojo-config="parseOnLoad: true" ></script>
+<script type="text/javascript">
+	dojo.require('dijit.form.Form');
+	dojo.require('dijit.form.Button');
+	dojo.require('dijit.form.ValidationTextBox');
+	dojo.require('dijit.form.CheckBox');
+	dojo.require('dijit.Dialog');
+	dojo.require('dijit.form.Textarea');
+	dojo.require('dijit.form.Select');
+</script>
+<!--[if lte IE 9]>
+<script type="text/javascript">
+(function(){
+    var count=0, splashUpdateInterval;
+    splashUpdateInterval = setInterval(function(){
+        count++;
+        var elm=document.getElementById('sas-hc-splash-headerText')
+        if(elm){
+            elm.innerHTML = "Loading" + new Array(count % 5).join('.');
+        }else{
+            window.clearInterval(splashUpdateInterval);
+        }
+    }, 300);
+}())
+</script><![endif]-->
+<div id="splash" style="display:none">
+<div id="sas-hc-splash">
+    <div id="sas-hc-splash-content">
+        <div class="SplashContentTable">
+            <div class="SplashContentTableCell">
+                <div class="SplashContentTableCellInner">
+                <div id="sas-hc-splash-headerText" class="SplashHeader SplashLoaderDots">Loading</div>
+                    <div class="SplashCircleContainer">
+                        <div id="SplashCircle1" class="SplashCircle">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+</head>
+
+
+<body class="corporate ksignin bg">
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+     <script src="resources/js/studio/dmslogin.js"></script>
+
+</body>
+</html>

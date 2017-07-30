@@ -283,6 +283,7 @@ lda_dir <- "./stats_ii/lda"
 	
 	homes_sas_keep <- subset(homes,
 			select = c(
+			id,
 			log_saleprice,
 			bsmtfinsf1,
 			bsmtfintype1,
@@ -301,13 +302,11 @@ lda_dir <- "./stats_ii/lda"
 			garagecars,
 			garagefinish,
 			garagetype,
-			grlivarea,
 			halfbath,
 			heatingqc,
 			housestyle,
 			kitchenqual,
 			log_grlivarea,
-			log_saleprice,
 			log_lotarea,
 			log_lotfrontage,
 			lotshape,
@@ -322,28 +321,12 @@ lda_dir <- "./stats_ii/lda"
 			x1stflrsf,
 			x2ndflrsf,
 			yearbuilt,
-			yearremodadd,
-# ..	- impute discretes
-			imp_bsmtfinsf1,
-			imp_bsmtfullbath,
-			imp_fireplaces,
-			imp_fullbath,
-			imp_garagearea,
-			imp_garagecars,
-			imp_halfbath,
-			imp_grlivarea,
-			imp_saleprice,
-			imp_lotarea,
-			imp_lotfrontage,
-			imp_overallcond,
-			imp_overallqual,
-			imp_totalbsmtsf,
-			imp_totrmsabvgrd,
-			imp_x1stflrsf,
-			imp_x2ndflrsf,
-			imp_yearbuilt,
-			imp_yearremodadd))
+			yearremodadd))
 	
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ..	- impute discretes are left out ... not that many imputed values
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # ... from the keep list , these are the factors :
 # ...	bsmtfintype1, bsmtqual, centralair, electrical, exterior1st, exterior2nd, exterqual,
