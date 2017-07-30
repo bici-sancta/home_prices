@@ -5,9 +5,10 @@
 # ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 home_dir <- "~/_smu/_src/home_prices/"
-setwd(home_dir)
 data_dir <- "./data"
-sas_dir <- "./sas_analysis/stats_ii/"
+lda_dir <- "./stats_ii/lda"
+
+sas_dir <- "~/sas/SASUniversityEdition/myfolders/stats_ii"
 
 setwd(home_dir)
 
@@ -66,7 +67,46 @@ setwd(home_dir)
 	
 	write.csv(test_homes, file = "test_set_cleaned.csv", row.names = FALSE)
 	
-	sas_dir <- "~/sas/SASUniversityEdition/myfolders/stats_ii"
 	setwd(sas_dir)
 	write.csv (test_homes, file = "test_set_cleaned.csv", row.names = FALSE)
+	
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# ...	Columns to retain for LDA - based on visual inspection of histograms / boxplots
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	test_homes_lda_keep <- subset(test_homes,
+			select = c(
+				lotfrontage, # ... wood
+				overallqual,
+				overallcond,
+				yearbuilt,	# !!!
+				yearremodadd, # !!!
+				masvnrarea,	# BrkTil
+				bsmtfinsf1,
+				bsmtunfsf,
+				totalbsmtsf,
+				x2ndflrsf,	# stone & wood
+				grlivarea,
+				bedroomabvgr,
+				kitchenabvgr,	# stone & slab
+				totrmsabvgrd,	# stone
+				garageyrblt,	# !!!
+				garagecars,	# P Conc
+				garagearea,	# Pconc $& wood
+				openporchsf,	# pconc & impute 0s to median
+				miscval,	# maybe wood & impute 0s to median
+				yrsold))	# stone .. maybe by chance
+
+# ...	--> 	saleprice #	impute in test set based on regression ??
+
+	setwd(home_dir)
+	setwd(lda_dir)
+	write.csv(test_homes_lda_keep, file = "lda_test_set_cleaned.csv", row.names = FALSE)
+	setwd(home_dir)
+	
+	setwd(sas_dir)
+	write.csv (test_homes_lda_keep, file = "lda_test_set_cleaned.csv", row.names = FALSE)
+	setwd(home_dir)
+
 

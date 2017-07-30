@@ -19,16 +19,19 @@ home_dir <- "~/_smu/_src/home_prices/"
 setwd(home_dir)
 
 data_dir <- "./data"
-lda_dir <- "./stats_ii/lda"
+
 
 ```
 
-## House Prices - à la Kaggle
+## House Prices 
 
-###Analysis Question 2  
+###### https://www.analyticsvidhya.com/blog/2016/03/practical-guide-principal-component-analysis-python/  
+
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  
+# ...	-NONE OF THIS IS DONE YET   
+# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  
 
 
-  
 ```{r read data, include = TRUE, message = FALSE}
 
 	setwd(home_dir)
@@ -116,17 +119,15 @@ lda_dir <- "./stats_ii/lda"
 		{
 			plot_title <- names(homes[i])
 
-			p <- ggplot(homes, aes(x = homes[,i], fill = homes[,i])) + 
-				geom_bar() + labs(title = plot_title)
+			p <- ggplot(homes, aes(x = homes[,i], fill = homes[,i])) + geom_bar() + labs(title = plot_title)
 			print(p)
 
-			p <- ggplot(homes, aes(x = homes[,i], y = log(saleprice), fill = homes[,i])) + 
-				geom_boxplot() + labs(title = plot_title)
+			p <- ggplot(homes, aes(x = homes[,i], y = log(saleprice), fill = homes[,i])) + geom_boxplot() + labs(title = plot_title)
 			print(p)
 		}
 	}	
 		
-	plot(log(homes$saleprice) ~ homes$sale_date)
+			plot(log(homes$saleprice) ~ homes$sale_date)
 
 	dev.off()
 ```
@@ -202,67 +203,7 @@ lda_dir <- "./stats_ii/lda"
 
 ```
 
-``` {r anova for foundation features, include = TRUE, message = FALSE}
 
-# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# ...	make some box plots for numeric variables vs. foundation type for LDA model
-# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-	pdf ("homes_train_foundation_boxplots.pdf", width = 10, height = 7)
-
-	par (mfrow = c (2, 2))
-	for (i in 2:(length(homes)))
-	{
-		if(class(homes[,i]) == "numeric")
-		{
-			plot_title <- names(homes[i])
-			
-			p <- ggplot(homes, aes(x = homes[,i], fill = foundation)) +
-    				geom_histogram() + labs(title = plot_title)
-			print(p)			
-			
-			p <- ggplot(homes, aes(x = foundation, y = homes[,i], fill = foundation)) + 
-				geom_boxplot() + labs(title = plot_title)
-			print(p)
-		}
-	}	
-		
-	dev.off()
-
-```
-``` {r visual retention for LDA on foundation, include = TRUE, message = FALSE}
-
-# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# ...	Columns to retain - based on visual inspection of histograms / boxplots
-# ...	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-	homes_lda_keep <- subset(homes,
-			select = c(
-				foundation,
-				lotfrontage, # ... wood
-				overallqual,
-				overallcond,
-				yearbuilt,	# !!!
-				yearremodadd, # !!!
-				masvnrarea,	# BrkTil
-				bsmtfinsf1,
-				bsmtunfsf,
-				totalbsmtsf,
-				x2ndflrsf,	# stone & wood
-				grlivarea,
-				bedroomabvgr,
-				kitchenabvgr,	# stone & slab
-				totrmsabvgrd,	# stone
-				garageyrblt,	# !!!
-				garagecars,	# P Conc
-				garagearea,	# Pconc $& wood
-				openporchsf,	# pconc & impute 0s to median
-				miscval,	# maybe wood & impute 0s to median
-				yrsold))	# stone .. maybe by chance
-
-# ...	--> 	saleprice #	impute in test set based on regression ??
-
-``` 
 
 
 ``` {r visual removals, include = TRUE, message = FALSE}
@@ -371,15 +312,6 @@ lda_dir <- "./stats_ii/lda"
 	setwd(data_dir)
 	write.csv (homes_sas_keep, file = "training_set_cleaned.csv", row.names = FALSE)
 	setwd(home_dir)
-	
-	setwd(home_dir)
-	setwd(lda_dir)
-	write.csv (homes_lda_keep, file = "lda_training_set_cleaned.csv", row.names = FALSE)
-	setwd(home_dir)
-	
-	sas_dir <- "~/sas/SASUniversityEdition/myfolders/stats_ii"
-	setwd(sas_dir)
-	write.csv (homes_lda_keep, file = "lda_training_set_cleaned.csv", row.names = FALSE)
 	
 
 ```
