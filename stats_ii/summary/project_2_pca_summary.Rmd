@@ -4,8 +4,9 @@ author: "msds 6372 - preeti swaminathan & patrick mcdevitt"
 date: "30 july 2017"
 output:
   html_document:
-    theme: united
     highlight: tango
+    theme: united
+  pdf_document: default
 --- 
 
 ***  
@@ -14,7 +15,7 @@ output:
 #### __Statement of Problem__  
 
 Estimating market value of a home for sale has significant implications for all parties involved in the transaction : seller, buyer, agents, mortgage providers and even local taxing authorities. Getting it right can improve local economies. Inefficiencies associated to historical methods of value assessments create hesitation on the part of buyers and lenders, and potential loss of revenue for sellers and agents. Developing a model that considers all available factors and provides a transparent valuation that can be shared among all parties in the transaction can enable the participants to proceed with increased confidence, thus increasing the velocity of the local real estate market.  
-That is the purpose of this evaluation : use all available contributing factors for the residential real estate market in Ames, Iowa and create a predicitve model to better estimate market valuation for future properties to be proposed for sale.  
+That is the purpose of this evaluation : use all available contributing factors for the residential real estate market in Ames, Iowa and create a predictive model to better estimate market valuation for future properties to be proposed for sale.  
 
 This summary is a follow-on to the summary that was provided last semester. In light of the previous summary provided, the focus of this document will be to augment, and not repeat, what was previously documented.
   
@@ -46,7 +47,7 @@ In order to build the model, the following steps are taken :
 * The data cleaning, visualizations, and preparation of the full cleaned data set were accomplished in R,  
 * The statistical analyses were then conducted in SAS  
 	
-* All of the plots for both of these visual evalutions are available for review at the referenced GitHub site :  
+* All of the plots for both of these visual evaluations are available for review at the referenced GitHub site :  
 	+ for the PCR model : https://github.com/bici-sancta/home_prices/blob/master/data/homes_train_plots.pdf  
 	+ for the LDA model : https://github.com/bici-sancta/home_prices/blob/master/data/homes_train_foundation_boxplots.pdf  
 * All of the R code that produced the visualizations and prepared the cleaned data sets are also available at the same GitHub site : https://github.com/bici-sancta/home_prices/blob/master/data/training_set_data_prep.Rmd  
@@ -91,6 +92,16 @@ The retained features in the final OLS model included :
  
  
 ***  
+
+### __1. Address the Comments__
+
+The only comments that were provided in the summary from last semester were in regards to the portion of the model that was devoted to the 3-neighborhood mini-model. That comment was to consider more clearly identifying the confidence intervals associated to that model.  
+
+There were no comments provided for the full OLS multi-variate regression model (as summarized above) that was used to generate the kaggle models comparison, and is the basis for this continuing study. Therefore, we will proceed to evaluate the data set with the additional methods, PCA and LDA, as requested for this Project 2.
+
+For reference, the full submitted document from last semester is located here :  
+https://github.com/bici-sancta/home_prices/blob/master/stats_i/summary/pmcdevitt_pswaminathan_msds_6371_homework13_2017.04.23.pdf  
+
 ***  
 ***
 
@@ -109,7 +120,7 @@ The retained features in the final OLS model included :
  
  From the modeling that was completed previously, the linearity of the model and (mostly) constant variance were demonstrated.
  
- * Linearity: The predicted vs. actual model from the prior linear regression modeling shows a very good fit, and strong linear response characteristics. In addition, the residuals plot do not show any obvious tendency towards non-linearity or increasing / decreasing variance across the range of values evaluated. The assumption of linearity appears respected for this model. We can state that the available features used to contruct a multi-variate linear regression model previously demonstrated satisfactory characteristics with regards to linearity.
+ * Linearity: The predicted vs. actual model from the prior linear regression modeling shows a very good fit, and strong linear response characteristics. In addition, the residuals plot do not show any obvious tendency towards non-linearity or increasing / decreasing variance across the range of values evaluated. The assumption of linearity appears respected for this model. We can state that the available features used to construct a multi-variate linear regression model previously demonstrated satisfactory characteristics with regards to linearity.
 
 * Equal variance: Similarly, from the prior modeling, the residuals plot and the studentized residuals plots both show that, within reasonable bounds, equal variances here are acceptable.
 
@@ -137,7 +148,7 @@ The method used to develop a PCR model in this case is as follows :
 	+ stop criteria of AIC.  
 * the __stepwise__ selection method was chosen because that method provided the best model in the previous exercise using OLS methods. Therefore, this evaluation is also using the stepwise method as a means to make a comparison with the previous modeling activity _best results_.  
 
-The model seletected by this method includes 12 of the possible 18 principal components and 3 of the categorical variables (neighborhood, bsmtqual, centralair) :  
+The model selected by this method includes 12 of the possible 18 principal components and 3 of the categorical variables (neighborhood, bsmtqual, centralair) :  
 
 <table align = "center" border = "1">
 <tr>
@@ -158,16 +169,16 @@ The model seletected by this method includes 12 of the possible 18 principal com
  
  
  
- The table above provides a basis to interpret the principal components of a slightly simpler model than the full model, used here for interpretaton purposes.  As an example, this table includes a PCA set for a model with the features included and the Pearson's correlation coefficient for the 1st four principal components. With more features, the explanation becomes a bit more cumbersome, so we will provide details for a few features here, and the method of interpretation for remaining features follows the same method. 
+ The table above provides a basis to interpret the principal components of a slightly simpler model than the full model, used here for interpretation purposes.  As an example, this table includes a PCA set for a model with the features included and the Pearson's correlation coefficient for the 1st four principal components. With more features, the explanation becomes a bit more cumbersome, so we will provide details for a few features here, and the method of interpretation for remaining features follows the same method. 
  The following observations can be made about this set of principal components :  
  
  * __PC_1__ : Strongest contributions from Overall_Quality, Number_of_Cars_Garage, and Total_Basement_Sq_Ft. In a sense, these are the high value characteristics of the home price market.  
    
- * __PC_2__ : Strong (negative) contributors from Year_Built and Year_Remodelled. This principal component is essentially the age feature of the home value - the newer the home and the more recently remodelled adds incremental value accounted for by PC_2.  
+ * __PC_2__ : Strong (negative) contributors from Year_Built and Year_Remodeled. This principal component is essentially the age feature of the home value - the newer the home and the more recently remodeled adds incremental value accounted for by PC_2.  
    
- * __PC_3__ : Strongest contribution from Overall_Condition. We oberved that Overall_Quality is not well correlated with Overall_Condition. This PC_3 is adding the value associated to the difference between _Condition and _Quality, in contrast to the _Quality value that is associated to PC_1.  From the data definitions, the overall quality is related to material and finish quality while overall condition is an overall condition rating.  
+ * __PC_3__ : Strongest contribution from Overall_Condition. We observed that Overall_Quality is not well correlated with Overall_Condition. This PC_3 is adding the value associated to the difference between _Condition and _Quality, in contrast to the _Quality value that is associated to PC_1.  From the data definitions, the overall quality is related to material and finish quality while overall condition is an overall condition rating.  
    
- * __PC_4__ : Strong contribution from Basment_Finish_Sq-Ft. We observed that basement and home size increase home sale prices in this market. This PC is accounting for a contribution from that type home feature.  
+ * __PC_4__ : Strong contribution from Basement_Finish_Sq-Ft. We observed that basement and home size increase home sale prices in this market. This PC is accounting for a contribution from that type home feature.  
    
  * For __PC_5__ through __PC_10__, the relative weights of the individual independent variables are depicted in the below bar graph, with the relative correlation of each feature to that principal component indicated by the height of the associated color in the bar graph. In this case, we can see that among the ten features included they form natural sub-groups with two features each :
  	- age related (year built, year remodeled)
@@ -176,15 +187,15 @@ The model seletected by this method includes 12 of the possible 18 principal com
  	- size, area
  	- quality and condition indicators.  
  	
-	The different hues of the same color identify features that can be logically associated (e.g., year_remodelled and year_built can both be associated to the idea of _age_).  
+	The different hues of the same color identify features that can be logically associated (e.g., year_remodeled and year_built can both be associated to the idea of _age_).  
  
 ![Visual view of principal components correlation with each feature](../pca/eigenvalues_explained.png)  
 
 ***  
  
- * __screeplots__    
+ * __scree plots__    
  
- The scree plot associated to the principal components is shown below. This relationship indicates relative weight of the eigenvales for the the principal components. It can be observed that 1st principal component has value of 6.1; the second principal component has value of 2.6 and each succeeding value progressively less. The sum of these eigenvalues is 18, corresponding to the number of principal components. The plot on the right shows the relative increase in variance explained (among the independent variables) for the successive addition of each principal component. The first five principal components can account for 65% of the variation in the data and 10 components can account for 90% of the variation.
+ The scree plot associated to the principal components is shown below. This relationship indicates relative weight of the eigenvalues for the the principal components. It can be observed that 1st principal component has value of 6.1; the second principal component has value of 2.6 and each succeeding value progressively less. The sum of these eigenvalues is 18, corresponding to the number of principal components. The plot on the right shows the relative increase in variance explained (among the independent variables) for the successive addition of each principal component. The first five principal components can account for 65% of the variation in the data and 10 components can account for 90% of the variation.
  
 ![Scree Plot](../pca/scree_plot_18.png)  
 
@@ -223,188 +234,8 @@ Overall, the PCR model produced results consistent the OLS model of similar deve
 
 ***
 
-\pagebreak
+\pagebreak  
 
-<P style="page-break-before: always">
+<P style="page-break-before: always">  
 
 ***
-
-##### __Appendix__  
-
-\pagebreak
-	
-	
-##### __PC Loading Plots__  
-
-![](../pca/loading_1_2.png)  
- 
-![](../pca/loading_1_3.png)
-![](../pca/loading_1_4.png)
-
-##### __SAS Code for principal components regression analysis__  
-
-```{r, tidy = FALSE, eval = FALSE, highlight = TRUE }
-
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-/* ...	Principal Components Regression			... */
-	
-/*	kaggle home prices data set
-/*	patrick mcdevitt
-/*	29-jul-2017
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-/* ...	start with clean memory	... */
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-proc datasets lib=work kill nolist memtype=data;
-quit;
-
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-/* ...	read in training data set	... */
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-FILENAME REFFILE '/folders/myfolders/stats_ii/training_set_cleaned.csv';
-
-PROC IMPORT DATAFILE = REFFILE
-	DBMS = CSV
-	OUT = home_prices;
-	GETNAMES = yes;
-RUN;
-
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-/* ...	read in test data set	... */
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-filename reffile '/folders/myfolders/stats_ii/test_set_cleaned.csv';
-
-proc import datafile = REFFILE
-	DBMS = csv
-	OUT = test_set;
-	GETNAMES = yes;
-RUN;
-
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-/* ...	combine train and test data sets		... */
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-data train_test;
- set home_prices test_set;
-run;
-
-title 'PCA for all (selected) independent numeric variables in training set';
-proc princomp data = train_test out = pc_home_prices;
-var bsmtfinsf1
-	bsmtfullbath
-	fireplaces
-	fullbath
-	garagearea
-	garagecars
-	halfbath
-	log_grlivarea
-	log_lotarea
-	log_lotfrontage
-	overallcond
-	overallqual
-	totalbsmtsf
-	totrmsabvgrd
-	x1stflrsf
-	x2ndflrsf
-	yearbuilt
-	yearremodadd;
-run;
-
-proc print data = pc_home_prices;
-run;
-
-/********************************************************
-			model with principal components + categoricals
-********************************************************/
-
-title 'Regression (stepwise) with full PC set + categorical variables';
-proc glmselect data = pc_home_prices plots = (criteria) seed = 3;
-class bsmtfintype1
-	bsmtqual
-	centralair
-	electrical
-	exterior1st
-	exterior2nd
-	exterqual
-	fireplacequ
-	foundation
-	garagefinish
-	garagetype
-	heatingqc
-	housestyle
-	kitchenqual
-	lotshape
-	masvnrtype
-	mszoning
-	neighborhood
-	saletype;	
-model log_saleprice = 
-	/*		continuous variables	*/
-	prin1-prin18
-	/*		categorical variables	*/
-	bsmtfintype1
-	bsmtqual
-	centralair
-	electrical
-	exterior1st
-	exterior2nd
-	exterqual
-	fireplacequ
-	foundation
-	garagefinish
-	garagetype
-	heatingqc
-	housestyle
-/*	kitchenqual	*/
-	lotshape
-	masvnrtype
-/*	mszoning 	*/
-	neighborhood
-	saletype / selection = stepwise(choose = CV select = cv stop = aic);
-output out = result p = Predict;
-run;
-
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-/* create kaggle submission file */
-/* two columns with appropriate labels. */
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-proc means data = result Min Max;
-run;
-
-proc means data = result noprint;
-	var Predict;
-    output out = means mean(Predict) = mean_predict;
-run;
-
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-/* 	in case any missing values in predicted set,			*/
-/*		impute with mean of predicted sale prices			*/
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-data kaggle_submit;
-set result;
-SalePrice = exp(Predict);
-if Predict = . then SalePrice = exp(12.024);
-keep id SalePrice;
-where id > 1460;
-run;
-
-proc export data = kaggle_submit replace
-   outfile = '/folders/myfolders/stats_ii/kaggle_submit_pca_step.1.csv'
-   dbms = csv;
-run;
-
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-/* 	...		end_of_file														*/
-/*	-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-
-
-```
-
